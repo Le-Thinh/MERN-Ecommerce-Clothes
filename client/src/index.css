@@ -1,0 +1,65 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Outfit:wght@100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Prata&display=swap');
+@import "tailwindcss";  
+
+
+* {
+    font-family: "Barlow Condensed", sans-serif;
+    box-sizing: border-box;
+    border-style: solid;
+}
+
+@font-face {
+    font-family: "barlow1";
+    src: url("fonts/barlow/BarlowCondensed-Medium.ttf");
+}
+
+.barlow1 {
+    font-family: "barlow1";
+}
+
+@font-face {
+    font-family: "barlow2";
+    src: url("fonts/barlow-semi/BarlowSemiCondensed-Medium.ttf");
+}
+
+.barlow2 {
+    font-family: "barlow2";
+}
+
+@font-face {
+    font-family: "barlow3";
+    src: url("fonts/barlow-semi/BarlowSemiCondensed-Medium.ttf");
+}
+
+.barlow3 {
+    font-family: "barlow3";
+}
+
+@font-face {
+    font-family: "barlow4";
+    
+    src: url("fonts/barlow/BarlowCondensed-Regular.ttf");
+}
+
+.barlow4 {
+    font-family: "barlow4";
+}
+
+@font-face {
+    font-family: "barlow5";
+    src: url("fonts/barlow-semi/BarlowSemiCondensed-SemiBold.ttf");
+}
+
+.barlow5 {
+    font-family: "barlow5";
+}
+
+.custom-select {
+  background-image: url(./assets/select.svg);
+  background-position: right 0.75rem center;
+  background-repeat: no-repeat;
+  background-size: 1rem;
+  padding-right: 2.5rem;
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+}
