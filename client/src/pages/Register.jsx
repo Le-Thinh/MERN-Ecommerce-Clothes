@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { assets } from "../assets/assets";
 import { toast } from "react-toastify";
 import { signUp } from "../api/user.api";
+import { Link } from "react-router-dom";
 const Register = () => {
   const [email, setEmail] = useState("");
 
@@ -72,9 +73,9 @@ const Register = () => {
         <div className="flex mt-5">
           <span className="text-sm font-normal">
             Bạn đã có tài khoản?{" "}
-            <a className="text-[#ea1b25] underline" href="/dang-nhap">
+            <Link className="text-[#ea1b25] underline" to="/dang-nhap">
               Đăng nhập
-            </a>
+            </Link>
           </span>
         </div>
 

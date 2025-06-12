@@ -5,11 +5,12 @@ const cors = require("cors");
 const { default: helmet } = require("helmet");
 const compression = require("compression");
 const { v4: uuidv4 } = require("uuid");
+const cookieParser = require("cookie-parser");
 
 const app = express();
 
 const corsOption = {
-  origin: process.env.PORT_CLIENT,
+  origin: process.env.URL_CLIENT,
   methods: "GET, HEAD, PUT, PATCH, POST, DELETE",
   credentials: true,
   optionsSuccessStatus: 204,
@@ -21,6 +22,7 @@ app.use(morgan("dev"));
 app.use(helmet());
 app.use(compression());
 app.use(express.json());
+app.use(cookieParser());
 app.use(
   express.urlencoded({
     extended: true,

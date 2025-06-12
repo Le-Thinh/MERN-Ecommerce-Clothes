@@ -1,11 +1,12 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { assets } from "../assets/assets";
 import { login } from "../api/user.api";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const Login = () => {
   const navigate = useNavigate();
+  const [atk, setATK] = useState(localStorage.getItem("atk"));
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
@@ -24,19 +25,22 @@ const Login = () => {
 
     try {
       const response = await login(email, password);
+      console.log("response", response);
 
-      const { accessToken, refreshToken } = response.data.tokens;
-      const clientId = response.metadata._id;
+      // const { accessToken, refreshToken } = response.data.metadata.tokens;
 
-      console.log("accessToken", accessToken);
-      console.log("refreshToken", refreshToken);
-      console.log("clientId", clientId);
+      const { accessToken } = response.data.metadata.tokens;
 
-      toast.success("Đăng nhập thành công");
+      const clientId = response.data.metadata.metadata._id;
+      if (response) {
+        localStorage.setItem("authorization", accessToken);
+        localStorage.setItem("x-client-id", clientId);
 
-      navigate("/");
-
-      return;
+        toast.success("Hello!!");
+        navigate("/");
+      } else {
+        toast.error("Something wrongs!!");
+      }
     } catch (error) {
       if (error.response?.data?.message) {
         toast.error(error.response.data.message);
@@ -46,13 +50,21 @@ const Login = () => {
     }
   };
 
+  useEffect(() => {
+    let accessToken = localStorage.getItem("authorization");
+
+    if (accessToken) {
+      navigate("/");
+    }
+  }, [navigate]);
+
   return (
     <div className="min-h-screen bg-[#e5e7eb] flex items-center justify-around w-full">
-      <a href="/">
+      <Link to="/">
         <div className="w-[500px] object-contain">
           <img src={assets.chillnfreelogo} alt="" />
         </div>
-      </a>
+      </Link>
       <div className="h-[600px] bg-white w-[500px] rounded-2xl p-10 flex flex-col">
         <h1 className="text-[#ea1b25] text-4xl font-bold flex items-center gap-2">
           Đăng nhập <img className="w-10 h-10" src={assets.logobird} alt="" />
@@ -108,9 +120,9 @@ const Login = () => {
         <div className="flex mt-5">
           <span className="text-sm font-normal">
             Bạn chưa có tài khoản?{" "}
-            <a className="text-[#ea1b25] underline" href="/dang-ky-tai-khoan">
+            <Link className="text-[#ea1b25] underline" to="/dang-ky-tai-khoan">
               Đăng ký
-            </a>
+            </Link>
           </span>
         </div>
 
@@ -122,14 +134,14 @@ const Login = () => {
           </div>
           <div className="flex justify-around items-center">
             <div className="h-10 w-10">
-              <a href="/">
+              <Link to="/">
                 <img src={assets.logofacebook} alt="facebook" />
-              </a>
+              </Link>
             </div>
             <div className="h-10 w-10">
-              <a href="/">
+              <Link to="/">
                 <img src={assets.logogoogle} alt="google" />
-              </a>
+              </Link>
             </div>
           </div>
         </div>

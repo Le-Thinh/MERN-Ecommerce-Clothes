@@ -25,8 +25,19 @@ class UserController {
   };
 
   login = async (req, res, next) => {
+    const response = await userService.login(req.body);
+
+    const { accessToken, refreshToken } = response.tokens;
+
+    res.cookie("x-rtoken-id", refreshToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: process.env.NODE_ENV === "production" ? "none" : "strict",
+      maxAge: 7 * 24 * 60 * 60 * 1000, //7d
+    });
+
     new SuccessResponse({
-      metadata: await userService.login(req.body),
+      metadata: response,
     }).send(res);
   };
 

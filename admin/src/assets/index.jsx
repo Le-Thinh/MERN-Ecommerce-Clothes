@@ -26,21 +26,8 @@ export const menuSidebar = [
         ></path>
       </svg>
     ),
-    path: "/",
-    children: [
-      {
-        Child: {
-          name: "Ecommerce",
-          path: "/",
-        },
-      },
-      {
-        Child: {
-          name: "....",
-          path: "/",
-        },
-      },
-    ],
+
+    subItems: [{ name: "Ecommerce", path: "/", pro: false }],
   },
   {
     name: "Accounts",
@@ -61,19 +48,9 @@ export const menuSidebar = [
       </svg>
     ),
     path: "/",
-    children: [
-      {
-        Child: {
-          name: "Users",
-          path: "/",
-        },
-      },
-      {
-        Child: {
-          name: "Employees",
-          path: "/",
-        },
-      },
+    subItems: [
+      { name: "Users", path: "/users", pro: false },
+      { name: "Employees", path: "/employees", pro: false },
     ],
   },
   {
@@ -94,7 +71,7 @@ export const menuSidebar = [
         ></path>
       </svg>
     ),
-    path: "/",
+    path: "/blog",
   },
   {
     name: "SPU - SKU",
@@ -114,20 +91,9 @@ export const menuSidebar = [
         ></path>
       </svg>
     ),
-    path: "/",
-    children: [
-      {
-        Child: {
-          name: "SPU",
-          path: "/",
-        },
-      },
-      {
-        Child: {
-          name: "SKU",
-          path: "/",
-        },
-      },
+    subItems: [
+      { name: "SPU", path: "/spu", pro: false },
+      { name: "SKU", path: "/sku", pro: false },
     ],
   },
   {
@@ -181,6 +147,7 @@ export const menuSidebar = [
         </defs>
       </svg>
     ),
+    path: "/categories",
   },
   {
     name: "Permission",
@@ -199,7 +166,7 @@ export const menuSidebar = [
         />
       </svg>
     ),
-    path: "/",
+    path: "/permission",
   },
   {
     name: "Calendar",
@@ -219,13 +186,13 @@ export const menuSidebar = [
         ></path>
       </svg>
     ),
-    path: "/",
+    path: "/calendar",
   },
 ];
 
 export const menuOther = [
   {
-    name: "Chars",
+    name: "Charts",
     icon: (
       <svg
         width="1em"
@@ -242,7 +209,7 @@ export const menuOther = [
         ></path>
       </svg>
     ),
-    path: "",
+    path: "/charts",
   },
 ];
 
@@ -393,5 +360,27 @@ export const productTemp = [
     price: "299000",
     status: "Delivered",
     image: tshirt,
+  },
+];
+
+export const calendar = [
+  {
+    id: "1",
+    title: "Event Conf.",
+    start: new Date().toISOString().split("T")[0],
+    extendedProps: { calendar: "Danger" },
+  },
+  {
+    id: "2",
+    title: "Meeting",
+    start: new Date(Date.now() + 86400000).toISOString().split("T")[0],
+    extendedProps: { calendar: "Success" },
+  },
+  {
+    id: "3",
+    title: "Workshop",
+    start: new Date(Date.now() + 172800000).toISOString().split("T")[0],
+    end: new Date(Date.now() + 259200000).toISOString().split("T")[0],
+    extendedProps: { calendar: "Primary" },
   },
 ];

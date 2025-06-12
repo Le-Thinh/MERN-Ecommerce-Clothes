@@ -14,7 +14,7 @@ router.get(
 );
 
 // authentication
-// router.use(authentication);
+router.use(authentication);
 router.post("/logout", asyncHandler(userController.logout));
 router.post(
   "/refreshTokenUser",
