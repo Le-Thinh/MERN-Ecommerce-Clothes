@@ -6,7 +6,7 @@ const createTokenPair = async (payload, publicKey, privateKey) => {
   try {
     const accessToken = await JWT.sign(payload, privateKey, {
       algorithm: "RS256",
-      expiresIn: "1m",
+      expiresIn: "2h",
     });
 
     const refreshToken = await JWT.sign(payload, privateKey, {

@@ -18,9 +18,39 @@ export const login = async (email, password) => {
   return response;
 };
 
+// export const logout = async () => {
+//   const response = await request.post(`${URL_BASE_USR}/logout`);
+
+//   return response;
+// };
+
 export const verifyEmail = async (token) => {
   const response = await request.get(`${URL_BASE_USR}/welcome-back`, {
     params: { token },
   });
+  return response;
+};
+
+export const getDataUser = async (userId, accessToken) => {
+  const response = await request.get(`${URL_BASE_USR}/getUser`, {
+    headers: {
+      "x-client-id": userId,
+      Authorization: accessToken,
+    },
+  });
+  return response;
+};
+
+export const logout = async (userId, accessToken) => {
+  const response = await request.post(
+    `${URL_BASE_USR}/logout`,
+    {},
+    {
+      headers: {
+        "x-client-id": userId,
+        Authorization: accessToken,
+      },
+    }
+  );
   return response;
 };

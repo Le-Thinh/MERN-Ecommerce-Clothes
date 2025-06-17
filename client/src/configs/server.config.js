@@ -12,16 +12,20 @@ export const request = axios.create({
   },
 });
 
+// get cookie
 function getCookie(name) {
-  const value = `; ${document.cookie}`;
-  const parts = value.split(`; ${name}=`);
-  if (parts.length === 2) return parts.pop().split(";").shift();
+  const cookies = document.cookie.split(";");
+  for (const cookie of cookies) {
+    const [cookieName, cookieValue] = cookie.split("=").map((c) => c.trim());
+    if (cookieName === name) return decodeURIComponent(cookieValue);
+  }
+  return null;
 }
 
 request.interceptors.request.use((config) => {
   const accessToken = localStorage.getItem("authorization");
   if (accessToken) {
-    config.headers.authorization = accessToken;
+    config.headers.Authorization = accessToken;
   }
   return config;
 });
@@ -30,28 +34,43 @@ request.interceptors.response.use(
   (response) => response,
   async (error) => {
     const originalRequest = error.config;
+    const isTokenExpired =
+      error.response?.status === 500 &&
+      error.response?.data?.message === "jwt expired";
 
-    if (error.response?.status === 401 && !originalRequest._retry) {
+    if (
+      (error.response?.status === 401 || isTokenExpired) &&
+      !originalRequest._retry
+    ) {
       originalRequest._retry = true;
 
       try {
         // Lấy các giá trị cần thiết từ storage và cookie
-        const refreshToken = getCookie("refreshToken");
+        const refreshToken = getCookie("x-rtoken-id");
         const clientId = localStorage.getItem("x-client-id");
         const accessToken = localStorage.getItem("authorization");
 
-        if (!refreshToken || !clientId) {
-          throw new Error("Missing authentication data");
+        if (!refreshToken) {
+          throw new Error("Missing refresh token");
+        }
+
+        if (!clientId) {
+          throw new Error("Missing client ID");
         }
 
         // Gọi API refresh token với đủ 3 headers
-        const res = await request.post("v1/api/user/refreshTokenUser", null, {
-          headers: {
-            "x-client-id": clientId,
-            "x-rtoken-id": refreshToken,
-            authorization: accessToken,
-          },
-        });
+        const res = await request.post(
+          "v1/api/user/refreshTokenUser",
+          {},
+          {
+            headers: {
+              "x-client-id": clientId,
+              authorization: accessToken,
+              "x-rtoken-id": refreshToken,
+            },
+            withCredentials: true,
+          }
+        );
 
         // Cập nhật access token mới
         const newAccessToken = res.data.metadata.tokens.accessToken;
@@ -61,8 +80,11 @@ request.interceptors.response.use(
         originalRequest.headers.Authorization = newAccessToken;
         return request(originalRequest);
       } catch (err) {
-        localStorage.clear();
-        window.location.href = "/login";
+        if (err.response?.status === 401 || err.response?.status === 403) {
+          localStorage.clear();
+          window.location.href = "/login";
+        }
+
         return Promise.reject(err);
       }
     }

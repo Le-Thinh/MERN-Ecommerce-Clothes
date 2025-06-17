@@ -229,8 +229,25 @@ class UserService {
     });
 
     return {
+      message: "Handle Ok!",
       user,
       tokens,
+    };
+  };
+
+  static getUser = async ({ user }) => {
+    const { userId } = user;
+
+    const foundUser = await USERMODEL.findById(userId);
+
+    if (!foundUser) throw new BadRequestError("User Not Found");
+
+    return {
+      message: "Get User Data OK!",
+      metadata: getInfoData({
+        fields: ["_id", "usr_name", "usr_email"],
+        object: foundUser,
+      }),
     };
   };
 }

@@ -30,7 +30,7 @@ class UserController {
     const { accessToken, refreshToken } = response.tokens;
 
     res.cookie("x-rtoken-id", refreshToken, {
-      httpOnly: true,
+      httpOnly: false,
       secure: process.env.NODE_ENV === "production",
       sameSite: process.env.NODE_ENV === "production" ? "none" : "strict",
       maxAge: 7 * 24 * 60 * 60 * 1000, //7d
@@ -42,6 +42,7 @@ class UserController {
   };
 
   logout = async (req, res, next) => {
+    res.clearCookie("x-rtoken-id");
     new SuccessResponse({
       message: "Logout OK!",
       metadata: await userService.logout(req.keyStore),
@@ -49,12 +50,27 @@ class UserController {
   };
 
   handleRefreshToken = async (req, res, next) => {
+    const response = await userService.handleRefreshToken({
+      keyStore: req.keyStore,
+      user: req.user,
+      refreshToken: req.refreshToken,
+    });
+
+    res.cookie("x-rtoken-id", response.tokens.refreshToken, {
+      httpOnly: false,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: process.env.NODE_ENV === "production" ? "none" : "strict",
+      maxAge: 7 * 24 * 60 * 60 * 1000, //7d
+    });
+
+    new SuccessResponse({ metadata: response }).send(res);
+  };
+
+  getUser = async (req, res, next) => {
     new SuccessResponse({
-      message: "RefreshToken OK!",
-      metadata: await userService.handleRefreshToken({
-        keyStore: req.keyStore,
+      message: "Get User Success",
+      metadata: await userService.getUser({
         user: req.user,
-        refreshToken: req.refreshToken,
       }),
     }).send(res);
   };

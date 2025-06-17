@@ -20,5 +20,6 @@ router.post(
   "/refreshTokenUser",
   asyncHandler(userController.handleRefreshToken)
 );
+router.get("/getUser", asyncHandler(userController.getUser));
 
 module.exports = router;
