@@ -51,7 +51,10 @@ request.interceptors.response.use(
         const accessToken = localStorage.getItem("authorization");
 
         if (!refreshToken) {
-          throw new Error("Missing refresh token");
+          localStorage.removeItem("x-client-id");
+          localStorage.removeItem("authorization");
+          window.location.href = "/dang-nhap";
+          return Promise.reject(new Error("Refresh token not found"));
         }
 
         if (!clientId) {

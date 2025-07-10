@@ -1,4 +1,5 @@
 @import url("https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap")
+
 layer(base);
 
 @import "tailwindcss";
@@ -291,7 +292,7 @@ layer(base);
 }
 
 @utility menu-dropdown-item-active {
-  @apply bg-brand-50 text-[#ea1b25] dark:bg-brand-500/[0.12] dark:text-brand-400;
+  @apply bg-brand-50 text-[#465fff] dark:bg-brand-500/[0.12] dark:text-brand-400;
 }
 
 @utility menu-dropdown-item-inactive {

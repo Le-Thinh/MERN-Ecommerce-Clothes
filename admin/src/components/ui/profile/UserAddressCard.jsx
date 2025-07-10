@@ -2,7 +2,7 @@ import React from "react";
 import { useModal } from "../../../hooks/useModal";
 import { Modal } from "../../modal";
 import Label from "../../form/Label";
-import Input from "../../form/input/InputField";
+import Input from "../../form/input/FileInput";
 import Button from "../button/button";
 
 const UserAddressCard = () => {

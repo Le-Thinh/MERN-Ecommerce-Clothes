@@ -21,7 +21,7 @@ var userSchema = new Schema(
     usr_status: {
       type: String,
       default: "active",
-      enum: ["pending", "active", "block"],
+      enum: ["pending", "active", "block", "disable"],
     },
   },
   {

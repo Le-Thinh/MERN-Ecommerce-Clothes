@@ -1,5 +1,6 @@
 "use strict";
 
+const { convertToObjectIdMongodb } = require("../../utils");
 const USER = require("../user.model");
 
 const createUser = async ({
@@ -41,8 +42,17 @@ const findUserByEmailV2 = async ({
   return USER.findOne({ usr_email: email }).select(select).lean();
 };
 
+const findUserById = async ({ id }) => {
+  const userId = convertToObjectIdMongodb(id);
+
+  const foundUser = await USER.findById(userId);
+
+  return foundUser;
+};
+
 module.exports = {
   createUser,
   findUserByEmail,
   findUserByEmailV2,
+  findUserById,
 };

@@ -6,7 +6,7 @@ const asyncHandler = require("../../helpers/asyncHandler.helper");
 const { authentication } = require("../../auth/authUtils");
 const router = express.Router();
 
-router.use(authentication);
+// router.use(authentication);
 
 router.post("/role", asyncHandler(rbacController.newRole));
 router.get("/roles", asyncHandler(rbacController.listRoles));

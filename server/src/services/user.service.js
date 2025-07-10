@@ -17,6 +17,7 @@ const {
   createUser,
   findUserByEmail,
   findUserByEmailV2,
+  findUserById,
 } = require("../models/repositories/user.repo");
 const KeyTokenService = require("./keytoken.service");
 const { createTokenPair } = require("../auth/token.auth");
@@ -250,6 +251,42 @@ class UserService {
       }),
     };
   };
+
+  /*BEGIN: ADMIN */
+  static getAllUser = ({ limit = 20, page = 1 }) => {
+    const skip = (page - 1) * limit;
+    const allUsers = USERMODEL.find({
+      usr_role: "683bfc9dd286968af6cbfcaa",
+    })
+      .skip(skip)
+      .limit(limit)
+      .lean();
+
+    if (!allUsers) throw new NotFoundError("Not Found User");
+
+    return allUsers;
+  };
+
+  static translateStatusUser = async ({ id }) => {
+    const foundUser = await findUserById({ id });
+    if (!foundUser) throw new NotFoundError("User Not Found");
+
+    const newStatus = foundUser.usr_status === "active" ? "disable" : "active";
+
+    foundUser.usr_status = newStatus;
+
+    await foundUser.save();
+
+    return newStatus;
+  };
+
+  static getUSerDataById = async ({ id }) => {
+    const foundUser = await findUserById({ id });
+    if (!foundUser) throw new NotFoundError("User Not Found");
+
+    return foundUser;
+  };
+  /*END: ADMIN */
 }
 
 module.exports = UserService;

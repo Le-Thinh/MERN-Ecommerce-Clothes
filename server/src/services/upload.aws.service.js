@@ -28,10 +28,9 @@ const uploadImageFromLocalS3 = async ({ file }) => {
     const url = getSignedUrl({
       url: `${urlImagePublic}/${imageName}`,
       keyPairId: process.env.AWS_BUCKET_CLOUDFRONT_PUBLIC_KEY,
-      dateLessThan: new Date(Date.now() + 1000 * 60 * 60 * 24), //Expire 24h
+      dateLessThan: new Date("2099-12-31T23:59:59Z"),
       privateKey: process.env.AWS_BUCKET_CLOUDFRONT_PRIVATE_KEY,
     });
-    console.log("url:::", url);
 
     return {
       url,

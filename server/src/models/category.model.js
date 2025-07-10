@@ -18,8 +18,8 @@ const categorySchema = new Schema(
       ref: "Category",
       default: null,
     }, // phân cấp cha-con
-    isDraft: { type: Boolean, default: true, index: true, select: false },
-    isPublished: { type: Boolean, default: false, index: true, select: false },
+    isDraft: { type: Boolean, default: true, index: true },
+    isPublished: { type: Boolean, default: false, index: true },
     isDeleted: { type: Boolean, default: false },
   },
   {

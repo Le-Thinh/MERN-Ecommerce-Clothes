@@ -74,6 +74,28 @@ class UserController {
       }),
     }).send(res);
   };
+
+  /*BEGIN: ADMIN */
+  getAllUser = async (req, res, next) => {
+    new SuccessResponse({
+      message: "Get All Users Success",
+      metadata: await userService.getAllUser(req.query),
+    }).send(res);
+  };
+
+  changeStatusUser = async (req, res, next) => {
+    new SuccessResponse({
+      message: "Change Status Users Success",
+      metadata: await userService.translateStatusUser({ id: req.params.id }),
+    }).send(res);
+  };
+
+  getUserByAdmin = async (req, res, next) => {
+    new SuccessResponse({
+      message: "Change Status Users Success",
+      metadata: await userService.getUSerDataById({ id: req.params.id }),
+    }).send(res);
+  };
 }
 
 module.exports = new UserController();

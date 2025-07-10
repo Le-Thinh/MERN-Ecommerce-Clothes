@@ -2,9 +2,17 @@
 
 import avatar from "./avatar.svg";
 import tshirt from "./soaring-tee.png";
+import upload_area from "./upload_area.png";
+import CalenderLine from "./calender-line.svg";
+import star from "./star.svg";
+import StarYellow from "./StarYellow.svg";
 
 export const image = {
   avatar,
+  upload_area,
+  CalenderLine,
+  star,
+  StarYellow,
 };
 
 export const menuSidebar = [
@@ -49,8 +57,8 @@ export const menuSidebar = [
     ),
     path: "/",
     subItems: [
-      { name: "Users", path: "/users", pro: false },
-      { name: "Employees", path: "/employees", pro: false },
+      { name: "Users", path: "/account/users", pro: false },
+      { name: "Employees", path: "/account/employees", pro: false },
     ],
   },
   {
@@ -91,9 +99,10 @@ export const menuSidebar = [
         ></path>
       </svg>
     ),
+    // path: "/products",
     subItems: [
-      { name: "SPU", path: "/spu", pro: false },
-      { name: "SKU", path: "/sku", pro: false },
+      { name: "SPU", path: "/products", pro: false },
+      { name: "Attributes", path: "/attributes", pro: false },
     ],
   },
   {
@@ -147,7 +156,11 @@ export const menuSidebar = [
         </defs>
       </svg>
     ),
-    path: "/categories",
+    // path: "/category",
+    subItems: [
+      { name: "List", path: "/category", pro: false },
+      { name: "Categories Deleted", path: "/categories-deleted", pro: false },
+    ],
   },
   {
     name: "Permission",
@@ -168,6 +181,7 @@ export const menuSidebar = [
     ),
     path: "/permission",
   },
+
   {
     name: "Calendar",
     icon: (

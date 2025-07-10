@@ -13,7 +13,14 @@ const replacePlaceholder = (template, params) => {
 };
 
 const getInfoData = ({ fields = [], object = {} }) => {
+  if (Array.isArray(object)) {
+    return object.map((item) => _.pick(item, fields));
+  }
   return _.pick(object, fields);
+};
+
+const unGetSelectData = (select = []) => {
+  return Object.fromEntries(select.map((el) => [el, 0]));
 };
 
 const randomProductId = (_) => {
@@ -50,6 +57,10 @@ const updateNestedObject = (obj) => {
   return final;
 };
 
+const getSelectData = (select = []) => {
+  return Object.fromEntries(select.map((el) => [el, 1]));
+};
+
 module.exports = {
   replacePlaceholder,
   getInfoData,
@@ -57,4 +68,6 @@ module.exports = {
   removeUndefinedObject,
   convertToObjectIdMongodb,
   updateNestedObject,
+  unGetSelectData,
+  getSelectData,
 };

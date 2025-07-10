@@ -198,187 +198,6 @@ const Sidebar = () => {
     </ul>
   );
 
-  // return (
-  //   <div>
-  //     <aside className="fixed mt-16 flex flex-col lg:mt-0 top-0 px-5 left-0 bg-white dark:bg-gray-900 dark:border-gray-800 text-gray-900 h-screen transition-all duration-300 ease-in-out z-50 border-r border-gray-200 w-[290px] -translate-x-full lg:translate-x-0">
-  //       <div className="py-8 flex items-center justify-start gap-4">
-  //         <a href="/">
-  //           <img
-  //             className="w-[40px] h-[40px] object-contain"
-  //             src="./logo-bird.ico"
-  //             alt=""
-  //           />
-  //         </a>
-  //         <h3 className="text-[#ea1b25] font-semibold text-2xl">
-  //           ChillnFree Admin
-  //         </h3>
-  //       </div>
-  //       <div className="flex flex-col overflow-y-auto duration-300 ease-linear no-scrollbar">
-  //         <nav className="mb-6">
-  //           <div className="flex flex-col gap-4">
-  //             <h2 className="mb-4 text-xs uppercase flex leading-[20px] text-gray-400 dark:text-[#d0d5dd] justify-start">
-  //               Menu
-  //             </h2>
-  //             <ul className="flex flex-col gap-4">
-  //               {menuSidebar.map((item, index) => (
-  //                 <li key={index}>
-  //                   {item.subItems ? (
-  //                     // Parent with dropdown
-  //                     <div
-  //                       className={`menu-item group cursor-pointer lg:justify-start dark:text-[#d0d5dd] hover:bg-gray-200 dark:hover:bg-white/10 ${
-  //                         openMenu === item.name
-  //                           ? "text-[#ea1b25] bg-gray-100 dark:bg-white/10"
-  //                           : "text-[#344054]"
-  //                       }`}
-  //                       onClick={() => toggleMenu(item.name)}
-  //                     >
-  //                       <span className="menu-item-icon-size">{item.icon}</span>
-  //                       <span
-  //                         className={`menu-item-text font-medium dark:text-[#d0d5dd] ${
-  //                           openMenu === item.name
-  //                             ? "text-[#ea1b25]"
-  //                             : "text-[#344054]"
-  //                         } ml-2`}
-  //                       >
-  //                         {item.name}
-  //                       </span>
-  //                       <svg
-  //                         className={`ml-auto w-5 h-5 transition-transform duration-200 dark:text-[#d0d5dd] ${
-  //                           openMenu === item.name ? "rotate-180" : ""
-  //                         }`}
-  //                         viewBox="0 0 20 20"
-  //                         fill="none"
-  //                         xmlns="http://www.w3.org/2000/svg"
-  //                       >
-  //                         <path
-  //                           d="M4.79175 7.396L10.0001 12.6043L15.2084 7.396"
-  //                           stroke="currentColor"
-  //                           strokeWidth="1.5"
-  //                           strokeLinecap="round"
-  //                           strokeLinejoin="round"
-  //                         />
-  //                       </svg>
-  //                     </div>
-  //                   ) : (
-  //                     // Direct link item
-  //                     <Link
-  //                       to={item.path}
-  //                       className={`menu-item group cursor-pointer lg:justify-start dark:text-[#d0d5dd] hover:bg-gray-200 dark:hover:bg-white/10 ${
-  //                         openMenu === item.name
-  //                           ? "text-[#ea1b25] bg-gray-100 dark:bg-white/10"
-  //                           : "text-[#344054]"
-  //                       }`}
-  //                       onClick={() => toggleMenu(item.name)}
-  //                     >
-  //                       <span className="menu-item-icon-size">{item.icon}</span>
-  //                       <span
-  //                         className={`menu-item-text font-medium dark:text-[#d0d5dd] ${
-  //                           openMenu === item.name
-  //                             ? "text-[#ea1b25]"
-  //                             : "text-[#344054]"
-  //                         } ml-2`}
-  //                       >
-  //                         {item.name}
-  //                       </span>
-  //                     </Link>
-  //                   )}
-
-  //                   {/* Dropdown subItems */}
-  //                   {item.subItems?.map((child, idx) => (
-  //                     <div
-  //                       key={idx}
-  //                       className={`transition-all dark:text-[#d0d5dd] duration-300 overflow-hidden ${
-  //                         openMenu === item.name ? "max-h-40 mt-2" : "max-h-0"
-  //                       }`}
-  //                     >
-  //                       <ul className="space-y-1 ml-9">
-  //                         <li className="hover:bg-gray-200 dark:hover:bg-white/10 rounded-lg">
-  //                           <Link
-  //                             className="menu-dropdown-item"
-  //                             to={child.path}
-  //                           >
-  //                             {child.name || "Unnamed"}
-  //                           </Link>
-  //                         </li>
-  //                       </ul>
-  //                     </div>
-  //                   ))}
-  //                 </li>
-  //               ))}
-  //             </ul>
-
-  //             <h2 className="text-xs uppercase flex leading-[20px] text-gray-400 justify-start">
-  //               Others
-  //             </h2>
-  //             <ul className="flex flex-col">
-  //               {menuOther.map((item, index) => (
-  //                 <li key={index}>
-  //                   <button
-  //                     className={`menu-item group cursor-pointer lg:justify-start hover:bg-gray-200 dark:text-[#d0d5dd] dark:hover:bg-white/10 ${
-  //                       openMenu === item.name
-  //                         ? "text-[#ea1b25] bg-gray-100 dark:bg-white/10"
-  //                         : "text-[#344054]"
-  //                     }`}
-  //                     onClick={() => toggleMenu(item.name)}
-  //                   >
-  //                     <span className="menu-item-icon-size dark:text-[#d0d5dd] ">
-  //                       {item.icon}
-  //                     </span>
-  //                     <span
-  //                       className={`menu-item-text font-medium dark:text-[#d0d5dd] ${
-  //                         openMenu === item.name
-  //                           ? "text-[#ea1b25]"
-  //                           : "text-[#344054]"
-  //                       } ml-2`}
-  //                     >
-  //                       {item.name}
-  //                     </span>
-  //                     {item.children && (
-  //                       <svg
-  //                         className={`ml-auto w-5 h-5 transition-transform duration-200 ${
-  //                           openMenu === item.name ? "rotate-180" : ""
-  //                         }`}
-  //                         viewBox="0 0 20 20"
-  //                         fill="none"
-  //                         xmlns="http://www.w3.org/2000/svg"
-  //                       >
-  //                         <path
-  //                           d="M4.79175 7.396L10.0001 12.6043L15.2084 7.396"
-  //                           stroke="currentColor"
-  //                           strokeWidth="1.5"
-  //                           strokeLinecap="round"
-  //                           strokeLinejoin="round"
-  //                         />
-  //                       </svg>
-  //                     )}
-  //                   </button>
-
-  //                   {item.children?.map((child, idx) => (
-  //                     <div
-  //                       key={idx}
-  //                       className={`transition-all duration-300 overflow-hidden ${
-  //                         openMenu === item.name ? "max-h-40 mt-2" : "max-h-0"
-  //                       }`}
-  //                     >
-  //                       <ul className="space-y-1 ml-9">
-  //                         <li className="hover:bg-gray-200 dark:hover:bg-white/10 rounded-lg">
-  //                           <a className="menu-dropdown-item" href="/">
-  //                             {child.Child.name || "Unnamed"}
-  //                           </a>
-  //                         </li>
-  //                       </ul>
-  //                     </div>
-  //                   ))}
-  //                 </li>
-  //               ))}
-  //             </ul>
-  //           </div>
-  //         </nav>
-  //       </div>
-  //     </aside>
-  //   </div>
-  // );
-
   return (
     <aside
       className={`fixed mt-16 flex flex-col lg:mt-0 top-0 px-5 left-0 bg-white dark:bg-gray-900 dark:border-gray-800 text-gray-900 h-screen transition-all duration-300 ease-in-out z-50 border-r border-gray-200 
@@ -402,20 +221,25 @@ const Sidebar = () => {
         <Link to="/">
           {isExpanded || isHovered || isMobileOpen ? (
             <>
-              <img
-                className="dark:hidden"
-                src="./logo-bird.ico"
-                alt="Logo"
-                width={40}
-                height={40}
-              />
-              <img
-                className="hidden dark:block"
-                src="./logo-bird.ico"
-                alt="Logo"
-                width={40}
-                height={40}
-              />
+              <div className="flex items-center justify-center gap-3">
+                <img
+                  className="dark:hidden"
+                  src="/logo-bird.ico"
+                  alt="Logo"
+                  width={40}
+                  height={40}
+                />
+                <img
+                  className="hidden dark:block"
+                  src="/logo-bird.ico"
+                  alt="Logo"
+                  width={40}
+                  height={40}
+                />
+                <h1 className="text-xl font-bold text-[#ea1b25]">
+                  Admin Dashboard
+                </h1>
+              </div>
             </>
           ) : (
             <img src="./logo-bird.ico" alt="Logo" width={32} height={32} />
@@ -433,11 +257,28 @@ const Sidebar = () => {
                     : "justify-start"
                 }`}
               >
-                {isExpanded || isHovered || isMobileOpen ? (
-                  "Menu"
-                ) : (
-                  <HorizontaLDots className="size-6" />
-                )}
+                {
+                  isExpanded || isHovered || isMobileOpen ? (
+                    "Menu"
+                  ) : (
+                    <svg
+                      width="1em"
+                      height="1em"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                      class="size-6"
+                    >
+                      <path
+                        fillRule="evenodd"
+                        clipRule="evenodd"
+                        d="M5.99915 10.2451C6.96564 10.2451 7.74915 11.0286 7.74915 11.9951V12.0051C7.74915 12.9716 6.96564 13.7551 5.99915 13.7551C5.03265 13.7551 4.24915 12.9716 4.24915 12.0051V11.9951C4.24915 11.0286 5.03265 10.2451 5.99915 10.2451ZM17.9991 10.2451C18.9656 10.2451 19.7491 11.0286 19.7491 11.9951V12.0051C19.7491 12.9716 18.9656 13.7551 17.9991 13.7551C17.0326 13.7551 16.2491 12.9716 16.2491 12.0051V11.9951C16.2491 11.0286 17.0326 10.2451 17.9991 10.2451ZM13.7491 11.9951C13.7491 11.0286 12.9656 10.2451 11.9991 10.2451C11.0326 10.2451 10.2491 11.0286 10.2491 11.9951V12.0051C10.2491 12.9716 11.0326 13.7551 11.9991 13.7551C12.9656 13.7551 13.7491 12.9716 13.7491 12.0051V11.9951Z"
+                        fill="currentColor"
+                      ></path>
+                    </svg>
+                  )
+                  /* <HorizontaLDots className="size-6" /> */
+                }
               </h2>
               {renderMenuItems(menuSidebar, "main")}
             </div>
@@ -449,11 +290,28 @@ const Sidebar = () => {
                     : "justify-start"
                 }`}
               >
-                {isExpanded || isHovered || isMobileOpen ? (
-                  "Others"
-                ) : (
-                  <HorizontaLDots />
-                )}
+                {
+                  isExpanded || isHovered || isMobileOpen ? (
+                    "Others"
+                  ) : (
+                    <svg
+                      width="1em"
+                      height="1em"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                      class="size-6"
+                    >
+                      <path
+                        fillRule="evenodd"
+                        clipRule="evenodd"
+                        d="M5.99915 10.2451C6.96564 10.2451 7.74915 11.0286 7.74915 11.9951V12.0051C7.74915 12.9716 6.96564 13.7551 5.99915 13.7551C5.03265 13.7551 4.24915 12.9716 4.24915 12.0051V11.9951C4.24915 11.0286 5.03265 10.2451 5.99915 10.2451ZM17.9991 10.2451C18.9656 10.2451 19.7491 11.0286 19.7491 11.9951V12.0051C19.7491 12.9716 18.9656 13.7551 17.9991 13.7551C17.0326 13.7551 16.2491 12.9716 16.2491 12.0051V11.9951C16.2491 11.0286 17.0326 10.2451 17.9991 10.2451ZM13.7491 11.9951C13.7491 11.0286 12.9656 10.2451 11.9991 10.2451C11.0326 10.2451 10.2491 11.0286 10.2491 11.9951V12.0051C10.2491 12.9716 11.0326 13.7551 11.9991 13.7551C12.9656 13.7551 13.7491 12.9716 13.7491 12.0051V11.9951Z"
+                        fill="currentColor"
+                      ></path>
+                    </svg>
+                  )
+                  /* <HorizontaLDots /> */
+                }
               </h2>
               {renderMenuItems(menuOther, "others")}
             </div>

@@ -20,12 +20,12 @@ const skuSchema = new Schema(
     sku_default: { type: Boolean, default: false },
     sku_slug: { type: String, default: "" },
     sku_sort: { type: Number, default: 0 },
-    sku_price: { type: String, required: true },
+    sku_price: { type: Number, required: true },
     sku_stock: { type: Number, default: 0 },
     sku_product_id: { type: String, required: true },
 
-    isDraft: { type: Boolean, default: true, index: true, select: false },
-    isPublished: { type: Boolean, default: false, index: true, select: false },
+    isDraft: { type: Boolean, default: true, index: true }, //select: false
+    isPublished: { type: Boolean, default: false, index: true }, //select: false
     isDeleted: { type: Boolean, default: false },
   },
   {

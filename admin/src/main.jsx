@@ -5,15 +5,21 @@ import { BrowserRouter } from "react-router-dom";
 import App from "./App.jsx";
 import { ThemeProvider } from "./contexts/ThemeContext.jsx";
 import { AppWrapper } from "./components/common/PageMeta.jsx";
+import { ShopContextProvider } from "./contexts/ShopContext.jsx";
+import { LoadingProvider } from "./contexts/LoadingContext.jsx";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
     <BrowserRouter>
-      <ThemeProvider>
-        <AppWrapper>
-          <App />
-        </AppWrapper>
-      </ThemeProvider>
+      <LoadingProvider>
+        <ThemeProvider>
+          <AppWrapper>
+            <ShopContextProvider>
+              <App />
+            </ShopContextProvider>
+          </AppWrapper>
+        </ThemeProvider>
+      </LoadingProvider>
     </BrowserRouter>
   </StrictMode>
 );

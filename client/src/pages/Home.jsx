@@ -13,9 +13,9 @@ const Home = () => {
           <NewProduct />
         </div>
 
-        <div className="mt-14">
+        {/* <div className="mt-14">
           <Accessory />
-        </div>
+        </div> */}
       </div>
     </div>
   );

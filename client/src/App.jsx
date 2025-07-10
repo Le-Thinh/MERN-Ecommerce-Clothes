@@ -10,6 +10,9 @@ import ProductDetail from "./pages/ProductDetail";
 import NewRelease from "./pages/NewRelease";
 import AllProduct from "./pages/AllProduct";
 import EmailVerified from "./pages/EmailVerified";
+import Cart from "./pages/Cart";
+import InfoAccount from "./pages/InfoAccount";
+import PurchaseHistory from "./components/user/PurchaseHistory";
 
 const App = () => {
   const location = useLocation();
@@ -31,6 +34,9 @@ const App = () => {
           <Route path="/san-pham" element={<AllProduct />} />
           <Route path="/san-pham/:product_slug" element={<ProductDetail />} />
           <Route path="/verify-email" element={<EmailVerified />} />
+          <Route path="/thong-tin" element={<InfoAccount />} />
+          <Route path="/gio-hang" element={<Cart />} />
+          <Route path="/lich-su-mua-hang" element={<PurchaseHistory />} />
         </Routes>
       </div>
       <footer className="">

@@ -14,11 +14,19 @@ router.post(
   "/unpublishCat/:id",
   asyncHandler(categoryController.unPublicCategory)
 );
+router.post("/deleteCat/:id", asyncHandler(categoryController.deleteCategory));
+router.post("/activeCat/:id", asyncHandler(categoryController.activeCategory));
 // ------- END: ROUTE publish & unpublish ------- //
 
 router.patch(
   "/updateCat/:catId",
   asyncHandler(categoryController.updateCategory)
+);
+
+router.get("/getAllCats", asyncHandler(categoryController.getAllCategory));
+router.get(
+  "/getCategoryDeleted",
+  asyncHandler(categoryController.getAllCategoryDelete)
 );
 
 module.exports = router;

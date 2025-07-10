@@ -12,6 +12,9 @@ router.get(
   "/welcome-back",
   asyncHandler(userController.checkRegisterEmailToken)
 );
+router.get("/getAllUsers", asyncHandler(userController.getAllUser));
+router.get("/getUserByAd/:id", asyncHandler(userController.getUserByAdmin));
+router.post("/changeStatus/:id", asyncHandler(userController.changeStatusUser));
 
 // authentication
 router.use(authentication);

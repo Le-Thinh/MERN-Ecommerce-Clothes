@@ -15,10 +15,40 @@ router.post(
   asyncHandler(productController.uploadImageFromLocalS3)
 );
 
-// router.post("/role", asyncHandler(rbacController.newRole));
-// router.get("/roles", asyncHandler(rbacController.listRoles));
+router.post("/spu/new", asyncHandler(productController.createSpu));
+router.patch(
+  "/spu/update/:spuId",
+  asyncHandler(productController.updateProduct)
+);
 
-// router.post("/resource", asyncHandler(rbacController.newResource));
-// router.get("/resources", asyncHandler(rbacController.listResources));
+router.get("/spu/getAll", asyncHandler(productController.getAllSpu));
+router.get(
+  "/spu/getAllSpus",
+  asyncHandler(productController.getAllSpusPublish)
+);
+router.get(
+  "/spu/getSpuBySlug/:slug",
+  asyncHandler(productController.getSpuBySlug)
+);
+
+router.get("/spu/getSpu/:spuId", asyncHandler(productController.getSpu));
+router.get(
+  "/spu/getAllSku/:spuId",
+  asyncHandler(productController.getAllSkuBySpuId)
+);
+
+router.post("/sku/publish/:skuId", asyncHandler(productController.publicSku));
+
+router.post(
+  "/sku/unPublish/:skuId",
+  asyncHandler(productController.unPublicSku)
+);
+
+router.post("/spu/publish/:spuId", asyncHandler(productController.publicSpu));
+
+router.post(
+  "/spu/unPublish/:spuId",
+  asyncHandler(productController.unPublicSpu)
+);
 
 module.exports = router;
