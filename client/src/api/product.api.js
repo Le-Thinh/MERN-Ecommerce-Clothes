@@ -17,3 +17,11 @@ export const getDataSpuBySlug = async (slug) => {
 
   return response;
 };
+
+export const searchSpuByUser = async (keySearch) => {
+  const response = await request.get(
+    `${URL_BASE_PRODUCT}/spu/search/${keySearch}`
+  );
+
+  return response;
+};
