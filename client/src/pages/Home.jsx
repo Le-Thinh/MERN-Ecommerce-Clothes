@@ -1,7 +1,6 @@
 import React from "react";
 import Slider from "../layouts/home/Slider";
 import NewProduct from "../layouts/home/NewProduct";
-import Accessory from "../layouts/home/accessory";
 
 const Home = () => {
   return (
@@ -12,10 +11,6 @@ const Home = () => {
         <div className="mt-14">
           <NewProduct />
         </div>
-
-        {/* <div className="mt-14">
-          <Accessory />
-        </div> */}
       </div>
     </div>
   );
