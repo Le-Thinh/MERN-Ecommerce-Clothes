@@ -3,7 +3,7 @@ import { useModal } from "../../../hooks/useModal";
 import { Modal } from "../../modal";
 import Label from "../../form/Label";
 import Input from "../../form/input/InputField";
-import Button from "../button/button";
+import Button from "../button/Button";
 import { image } from "../../../assets";
 
 const UserMetaCard = () => {
