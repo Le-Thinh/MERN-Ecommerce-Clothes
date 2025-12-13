@@ -35,7 +35,6 @@ const ListAttribute = () => {
   ]);
 
   const handleDeleteAttribute = async (id) => {
-    setLoading(true);
     try {
       const result = await Swal.fire({
         title: "Xác nhận xoá?",
@@ -47,6 +46,7 @@ const ListAttribute = () => {
       });
 
       if (!result.isConfirmed) return;
+      setLoading(true);
 
       const res = await deleteAttribute(id);
       if (res) {
@@ -184,7 +184,7 @@ const ListAttribute = () => {
 
   useEffect(() => {
     fetchAttributes();
-  }, [setAttributes]);
+  }, []);
 
   return (
     <>

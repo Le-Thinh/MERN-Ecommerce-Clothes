@@ -7,10 +7,10 @@ import ComponentCard from "../common/ComponentCard";
 import PageBreadcrumb from "../common/PageBreadcrumb";
 import { image } from "../../assets";
 import { useShopContext } from "../../contexts";
-import { getAllCategory } from "../../api/category.api";
+import { getAllCategory, getCategoryPublic } from "../../api/category.api";
 import { toast } from "react-toastify";
 import { Modal } from "../modal";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import MultiSelect from "../form/MultiSelect";
 import { uploadImage } from "../../api/upload.api";
 import { createNewSpu } from "../../api/product.api";
@@ -33,6 +33,7 @@ const CreateSpu = () => {
   const [productPrice, setProductPrice] = useState("");
   const [productQuantity, setProductQuantity] = useState("");
   const [productCategory, setProductCategory] = useState([]);
+  const navigate = useNavigate();
   // const [productThumb, setProductThumb] = useState([]);
   // const [productAttributes, setProductAttributes] = useState([]);
   const [productVariations, setProductVariations] = useState([]);
@@ -124,7 +125,7 @@ const CreateSpu = () => {
 
   const fetchCategories = async () => {
     try {
-      const res = await getAllCategory();
+      const res = await getCategoryPublic();
       const categoriesFromAPI = res?.data?.metadata || [];
       console.log(categoriesFromAPI);
       setCategory(categoriesFromAPI);
@@ -187,6 +188,7 @@ const CreateSpu = () => {
       console.log(body);
       if (res) {
         toast.success("Tạo sản phẩm thành công");
+        navigate("/products");
       } else {
         toast.error("Tạo sản phẩm thất bại");
       }
@@ -203,7 +205,7 @@ const CreateSpu = () => {
       <ComponentCard>
         <form
           onSubmit={handleSubmit}
-          className="space-y-6 p-6 bg-white rounded-xl shadow-md"
+          className="space-y-6 p-6 bg-white dark:bg-white/[0.03] rounded-xl shadow-md"
         >
           <div>
             <Label>Tên sản phẩm</Label>
@@ -222,7 +224,7 @@ const CreateSpu = () => {
               value={productDescription}
               onChange={(e) => setProductDescription(e.target.value)}
               placeholder="Nhập mô tả"
-              className="w-full h-24 border rounded-lg px-4 py-2"
+              className="w-full h-24 border rounded-lg px-4 py-2 dark:text-white/90"
             />
           </div>
 
@@ -251,7 +253,7 @@ const CreateSpu = () => {
           </div>
 
           <div className="grid grid-cols-2 gap-4">
-            <div>
+            <div className="dark:text-white/90">
               <Label>Danh mục (IDs, cách nhau bởi dấu phẩy)</Label>
               <MultiSelect
                 label="Multiple Select Options"
@@ -263,7 +265,7 @@ const CreateSpu = () => {
                 onChange={setProductCategory}
               />
               <p className="sr-only">
-                Selected Values: {productCategory.join(", ")}
+                <span>Selected Values:</span> {productCategory.join(", ")}
               </p>
             </div>
 

@@ -1,6 +1,6 @@
 import { Children, createContext, useState } from "react";
 
-const ShopContext = createContext(undefined);
+const ShopContext = createContext();
 
 export const ShopContextProvider = ({ children }) => {
   const [categories, setCategory] = useState([]);

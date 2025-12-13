@@ -62,8 +62,8 @@ const CategoryDeleted = () => {
   }, [setCategory]);
   return (
     <div className="overflow-x-auto">
-      <Table className="border border-gray-300">
-        <TableHeader className="bg-gray-100">
+      <Table className="dark:border-white/20">
+        <TableHeader className="bg-gray-100 dark:bg-white/[0.03]">
           <TableRow>
             <TableCell
               isHeader
@@ -113,40 +113,43 @@ const CategoryDeleted = () => {
         <TableBody>
           {categories.length > 0 ? (
             categories.map((cat, index) => (
-              <TableRow key={index} className="hover:bg-gray-50">
-                <TableCell className="border px-5 py-4 sm:px-6 text-start">
+              <TableRow
+                key={index}
+                className="hover:bg-gray-50 dark:hover:bg-white/5 border border-gray-300 dark:border-white/20"
+              >
+                <TableCell className="px-5 py-4 sm:px-6 text-start">
                   <span className="block font-medium text-gray-800 text-theme-sm dark:text-white/90">
                     {index + 1}
                   </span>
                 </TableCell>
-                <TableCell className="border px-5 py-4 sm:px-6 text-start">
+                <TableCell className="px-5 py-4 sm:px-6 text-start">
                   <span className="block font-medium text-gray-800 text-theme-sm dark:text-white/90">
                     {cat.cat_id}
                   </span>
                 </TableCell>
-                <TableCell className="border px-4 py-2 flex justify-center">
+                <TableCell className="px-4 py-2 flex justify-center">
                   <img
                     className="w-10 object-contain"
                     src={cat.cat_image}
                     alt=""
                   />
                 </TableCell>
-                <TableCell className="border px-5 py-4 sm:px-6 text-start w-[100px]">
+                <TableCell className="px-5 py-4 sm:px-6 text-start w-[100px]">
                   <span className="block font-medium text-gray-800 text-theme-sm dark:text-white/90">
                     {cat.cat_name}
                   </span>
                 </TableCell>
-                <TableCell className="border px-5 py-4 sm:px-6 text-start w-[280px]">
+                <TableCell className="px-5 py-4 sm:px-6 text-start w-[280px]">
                   <span className="block font-medium text-gray-800 text-theme-sm dark:text-white/90">
                     {cat.cat_description}
                   </span>
                 </TableCell>
-                <TableCell className="border px-5 py-4 sm:px-6 text-start">
+                <TableCell className="px-5 py-4 sm:px-6 text-start">
                   <span className="block font-medium text-gray-800 text-theme-sm dark:text-white/90">
                     {cat.cat_parent}
                   </span>
                 </TableCell>
-                <TableCell className="border space-x-2 text-center">
+                <TableCell className="space-x-2 text-center">
                   <button
                     onClick={() => activeCategory(cat._id)}
                     className={`px-3 py-1  text-white rounded bg-gray-500 hover:bg-blue-600 transition-all duration-200`}

@@ -18,7 +18,6 @@ const ListCategory = ({ categories, onRefresh }) => {
   const handlePublishCat = async (id) => {
     try {
       const res = await isPublishedCategory(id);
-
       if (res) {
         if (res.data.metadata.status === "publish") {
           toast.info(res.data.metadata.message);
@@ -28,7 +27,6 @@ const ListCategory = ({ categories, onRefresh }) => {
         }
       } else {
         toast.error("Publish Category Failure!!");
-        return res;
       }
     } catch (error) {
       console.error(error);
@@ -39,7 +37,6 @@ const ListCategory = ({ categories, onRefresh }) => {
   const handleUnpublishCat = async (id) => {
     try {
       const res = await unpublishCatCategory(id);
-
       if (res) {
         if (res.data.metadata.status === "draft") {
           toast.info(res.data.metadata.message);
@@ -49,7 +46,6 @@ const ListCategory = ({ categories, onRefresh }) => {
         }
       } else {
         toast.error("Un Publish Category Failure!!");
-        return;
       }
     } catch (error) {
       console.error(error);
@@ -71,13 +67,11 @@ const ListCategory = ({ categories, onRefresh }) => {
 
     try {
       const res = await isDeletedCategory(id);
-
       if (res) {
         toast.success("Delete Category Successfully");
         onRefresh?.();
       } else {
         toast.error("Delete Category Failure!!");
-        return res;
       }
     } catch (error) {
       console.error(error);
@@ -87,8 +81,8 @@ const ListCategory = ({ categories, onRefresh }) => {
 
   return (
     <div className="overflow-x-auto">
-      <Table className="">
-        <TableHeader className="bg-gray-100">
+      <Table>
+        <TableHeader>
           <TableRow>
             <TableCell
               isHeader
@@ -100,7 +94,7 @@ const ListCategory = ({ categories, onRefresh }) => {
               isHeader
               className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
             >
-              Cat id
+              Cat ID
             </TableCell>
             <TableCell
               isHeader
@@ -114,7 +108,6 @@ const ListCategory = ({ categories, onRefresh }) => {
             >
               Name
             </TableCell>
-
             <TableCell
               isHeader
               className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
@@ -135,68 +128,82 @@ const ListCategory = ({ categories, onRefresh }) => {
             </TableCell>
           </TableRow>
         </TableHeader>
+
         <TableBody>
           {categories.length > 0 ? (
             categories.map((cat, index) => (
-              <TableRow key={index} className="hover:bg-gray-50">
-                <TableCell className=" px-5 py-4 sm:px-6 text-start ">
-                  <span className="block font-medium text-gray-800 text-theme-sm dark:text-white/90">
+              <TableRow
+                key={index}
+                className="hover:bg-gray-50 dark:hover:bg-white/5 border-b dark:border-white/10"
+              >
+                <TableCell className="px-5 py-4 sm:px-6 text-start">
+                  <span className="block font-medium text-gray-800 dark:text-white/90 text-theme-sm">
                     {index + 1}
                   </span>
                 </TableCell>
-                <TableCell className=" px-5 py-4 sm:px-6 text-start">
-                  <span className="block font-medium text-gray-800 text-theme-sm dark:text-white/90">
+
+                <TableCell className="px-5 py-4 sm:px-6 text-start">
+                  <span className="block font-medium text-gray-800 dark:text-white/90 text-theme-sm">
                     {cat.cat_id}
                   </span>
                 </TableCell>
-                <TableCell className="  px-4 py-2 flex justify-center">
+
+                <TableCell className="px-4 py-2 flex justify-center">
                   <img
-                    className="w-10 object-contain"
                     src={cat.cat_image}
-                    alt=""
+                    alt="cat"
+                    className="w-12 h-12 object-cover rounded"
                   />
                 </TableCell>
-                <TableCell className=" px-4 py-2 text-center w-[100px]">
-                  <span className="block font-medium text-gray-800 text-theme-sm dark:text-white/90">
+
+                <TableCell className="px-4 py-2 text-center w-[100px]">
+                  <span className="block font-medium text-gray-800 dark:text-white/90 text-theme-sm">
                     {cat.cat_name}
                   </span>
                 </TableCell>
-                <TableCell className=" px-4 py-2 text-center w-[280px]">
-                  <span className="block font-medium text-gray-800 text-theme-sm dark:text-white/90">
+
+                <TableCell className="px-4 py-2 text-start w-[250px]">
+                  <span className="block font-medium text-gray-800 dark:text-white/90 text-theme-sm line-clamp-2">
                     {cat.cat_description}
                   </span>
                 </TableCell>
-                <TableCell className=" px-5 py-4 sm:px-6 text-start">
-                  <span className="block font-medium text-gray-800 text-theme-sm dark:text-white/90">
-                    {cat.cat_parent}
+
+                <TableCell className="px-5 py-4 sm:px-6 text-start">
+                  <span className="block font-medium text-gray-800 dark:text-white/90 text-theme-sm">
+                    {cat.cat_parent || "-"}
                   </span>
                 </TableCell>
-                <TableCell className=" space-x-2 text-center">
-                  <button
-                    // onClick={() => onEdit(cat)}
-                    className="px-3 py-1 bg-yellow-400 rounded"
-                  >
+
+                <TableCell className="flex flex-wrap gap-2 px-5 py-4 sm:px-6 text-center">
+                  <button className="px-3 py-1 bg-yellow-500 text-white rounded hover:bg-yellow-600 transition">
                     Update
                   </button>
+
                   <button
                     onClick={() => handleUnpublishCat(cat._id)}
-                    className={`px-3 py-1  text-white rounded ${
-                      cat.isDraft ? "bg-blue-600" : "bg-gray-500"
+                    className={`px-3 py-1 text-white rounded transition ${
+                      cat.isDraft
+                        ? "bg-blue-600 hover:bg-blue-700"
+                        : "bg-gray-500 hover:bg-gray-600"
                     }`}
                   >
-                    isDraft
+                    Draft
                   </button>
+
                   <button
                     onClick={() => handlePublishCat(cat._id)}
-                    className={`px-3 py-1  text-white rounded ${
-                      cat.isPublished ? "bg-blue-600" : "bg-gray-500"
+                    className={`px-3 py-1 text-white rounded transition ${
+                      cat.isPublished
+                        ? "bg-blue-600 hover:bg-blue-700"
+                        : "bg-gray-500 hover:bg-gray-600"
                     }`}
                   >
-                    isPublished
+                    Publish
                   </button>
+
                   <button
                     onClick={() => handleDeleteCat(cat._id)}
-                    className="px-3 py-1 bg-red-500 text-white rounded"
+                    className="px-3 py-1 bg-red-600 text-white rounded hover:bg-red-700 transition"
                   >
                     Delete
                   </button>
@@ -205,7 +212,10 @@ const ListCategory = ({ categories, onRefresh }) => {
             ))
           ) : (
             <TableRow>
-              <TableCell className="text-center py-4 text-gray-500" colSpan={3}>
+              <TableCell
+                colSpan={7}
+                className="text-center py-6 text-gray-500 dark:text-gray-400"
+              >
                 Không có danh mục nào.
               </TableCell>
             </TableRow>

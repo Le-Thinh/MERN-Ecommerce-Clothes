@@ -107,6 +107,12 @@ const Login = () => {
               </label>
             </div>
 
+            <Link to="/quen-mat-khau">
+              <span className="text-[#ea1b25] opacity-50 hover:opacity-90 transition-all duration-300 text-sm">
+                Quên mật khẩu?
+              </span>
+            </Link>
+
             <button
               href="/"
               className=" w-[250px] p-3.5 text-center text-white bg-[#ea1b25] rounded-2xl cursor-pointer font-bold "

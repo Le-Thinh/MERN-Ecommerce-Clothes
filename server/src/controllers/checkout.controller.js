@@ -31,6 +31,15 @@ class CheckoutController {
       }),
     }).send(res);
   };
+
+  /*BEGIN: ADMIN */
+  getAmountOrders = async (req, res, next) => {
+    new SuccessResponse({
+      message: "GET AMOUNT ORDERS",
+      metadata: await CheckoutService.getAmountOrders(),
+    }).send(res);
+  };
+  /*END: ADMIN */
 }
 
 module.exports = new CheckoutController();

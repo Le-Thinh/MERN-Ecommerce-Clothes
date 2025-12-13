@@ -99,6 +99,7 @@ const EditSpu = () => {
 
       const sanitizedSkuList = skus.map((item) => ({
         _id: item._id,
+        // sku_id: item.sku_id,
         sku_tier_idx: item.sku_tier_idx,
         sku_price: Number(item.sku_price) || 0,
         sku_stock: Number(item.sku_stock) || 0,

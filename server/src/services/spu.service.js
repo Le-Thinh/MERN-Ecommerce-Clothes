@@ -9,8 +9,17 @@ const {
   updateNestedObject,
   convertToObjectIdMongodb,
 } = require("../utils/index");
-const { newSku, allSkuBySpuId, updateSku } = require("./sku.service");
+const {
+  newSku,
+  allSkuBySpuId,
+  updateSku,
+  allSkuByClientShop,
+} = require("./sku.service");
 const CATEGORY = require("../models/category.model");
+const {
+  searchProductByAdmin,
+  searchProductByUser,
+} = require("../models/repositories/product.repo");
 
 class SPUService {
   static newSpu = async ({
@@ -91,6 +100,13 @@ class SPUService {
     }
   };
 
+  static searchSpuByUser = async ({ keySearch }) => {
+    return await searchProductByUser({ keySearch });
+  };
+  static searchSpuByAdmin = async ({ keySearch }) => {
+    return await searchProductByAdmin({ keySearch });
+  };
+
   static async oneSpuBySlug({ product_slug }) {
     try {
       const spu = await SPU.findOne({
@@ -100,7 +116,7 @@ class SPUService {
 
       if (!spu) throw new NotFoundError("SPU not found");
 
-      const skus = await allSkuBySpuId({
+      const skus = await allSkuByClientShop({
         sku_product_id: spu.product_id,
       });
 
@@ -131,7 +147,7 @@ class SPUService {
   };
 
   /*BEGIN: FEATURE ADMIN */
-  static getAllSpuFromAd = async () => {
+  static getAllSpuFromAd = async ({ limit = 10, skip = 0 }) => {
     const spus = await SPU.aggregate([
       {
         $lookup: {
@@ -157,13 +173,20 @@ class SPUService {
           isDraft: 1,
         },
       },
+      { $skip: parseInt(skip) },
+      { $limit: parseInt(limit) },
     ]);
 
     if (!spus) {
       throw new NotFoundError("Spu not found");
     }
 
-    return spus;
+    const totalCount = await SPU.countDocuments();
+
+    return {
+      spus,
+      totalPages: Math.ceil(totalCount / limit),
+    };
   };
 
   static getSpuFromId = async ({ id }) => {

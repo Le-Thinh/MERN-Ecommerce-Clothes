@@ -4,8 +4,29 @@ import { request } from "../configs/server.config";
 
 const URL_BASE_USR = "v1/api/user";
 
-export const signUp = async (email) => {
-  const response = await request.post(`${URL_BASE_USR}/new-user`, { email });
+export const signUp = async (email, password) => {
+  const response = await request.post(`${URL_BASE_USR}/new-user`, {
+    email,
+    password,
+  });
+  return response;
+};
+
+export const sendMailResetPassword = async (email) => {
+  const response = await request.post(`${URL_BASE_USR}/send-mail-repass`, {
+    email,
+  });
+  return response;
+};
+
+export const updatePassword = async (token, newPassword) => {
+  const response = await request.post(
+    `${URL_BASE_USR}/reset-password`,
+    {
+      newPassword: newPassword,
+    },
+    { params: { token } }
+  );
   return response;
 };
 

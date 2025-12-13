@@ -16,7 +16,7 @@ const otpSchema = new Schema(
     },
     expireAt: {
       type: Date,
-      default: Date.now,
+      default: () => Date.now() + 24 * 60 * 60 * 1000,
       expires: 9999,
     },
   },

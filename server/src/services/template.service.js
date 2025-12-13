@@ -3,6 +3,7 @@
 const TEMPLATE = require("../models/template.model");
 const crypto = require("crypto");
 const { htmlEmailToken } = require("../utils/template.html");
+const { HTMLrepass } = require("../utils/resetPassword.template.html");
 const { findTemplateByIdTem } = require("../models/repositories/template.repo");
 const { BadRequestError } = require("../core/error.response");
 
@@ -17,7 +18,7 @@ class TemplateService {
     const newTem = await TEMPLATE.create({
       tem_name,
       tem_id,
-      tem_html: htmlEmailToken(),
+      tem_html: HTMLrepass(),
     });
 
     return newTem;

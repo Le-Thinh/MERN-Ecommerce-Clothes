@@ -6,7 +6,14 @@ const checkoutController = require("../../controllers/checkout.controller");
 const router = express.Router();
 const { authentication } = require("../../auth/authUtils");
 
+/*ADMIN */
+
 router.use(authentication);
+
+router.get(
+  "/getAmountOrders",
+  asyncHandler(checkoutController.getAmountOrders)
+);
 
 router.post("/orderByUser", asyncHandler(checkoutController.orderByUser));
 

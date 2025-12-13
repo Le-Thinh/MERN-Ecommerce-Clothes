@@ -14,14 +14,40 @@ const checkProductByServer = async (products) => {
       if (foundProduct) {
         return {
           price: Number(foundProduct.sku_price),
-          quantity: product.quantity,
+          quantity: product.sku_stock,
           skuId: product.sku_id,
         };
       }
+      console.log(foundProduct);
     })
   );
 };
 
+const searchProductByUser = async ({ keySearch }) => {
+  const regexSearch = new RegExp(keySearch);
+  const result = await SPU.find({
+    isPublished: true,
+    $text: { $search: regexSearch },
+  })
+    .sort({ score: { $meta: "textScore" } })
+    .lean();
+
+  return result;
+};
+
+const searchProductByAdmin = async ({ keySearch }) => {
+  const regexSearch = new RegExp(keySearch);
+  const result = await SPU.find({
+    $text: { $search: regexSearch },
+  })
+    .sort({ score: { $meta: "textScore" } })
+    .lean();
+
+  return result;
+};
+
 module.exports = {
   checkProductByServer,
+  searchProductByUser,
+  searchProductByAdmin,
 };

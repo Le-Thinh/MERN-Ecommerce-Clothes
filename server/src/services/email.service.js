@@ -1,6 +1,8 @@
 "use strict";
 
+const { NotFoundError } = require("../core/error.response");
 const transport = require("../db/init.nodemailer");
+const { findUserByEmail } = require("../models/repositories/user.repo");
 const { replacePlaceholder } = require("../utils");
 const { newOtp } = require("./otp.service");
 const templateService = require("./template.service");
@@ -60,6 +62,34 @@ class EmailService {
       console.error(`Error send mail::`, error);
       return error;
     }
+  };
+
+  static sendMailResetPassword = async ({ email }) => {
+    const foundExistEmail = await findUserByEmail({ email });
+    if (!foundExistEmail) throw new NotFoundError("Email Not Found!");
+
+    const token = await newOtp({ email });
+
+    const template = await templateService.getTemplate({
+      tem_name: "HTML Reset Password Token",
+    });
+
+    if (!template) throw new NotFoundError("Template not found");
+
+    const content = replacePlaceholder(template.tem_html, {
+      action_url: `http://localhost:3000/user/password/reset?token=${token.otp_token}`,
+    });
+
+    this.sendMailLinkVerify({
+      html: content,
+      toEmail: email,
+      subject: "Reset Password Instructions",
+    }).catch((err) => console.error(err));
+
+    return {
+      message: "Send Mail Successfully",
+      metadata: 1,
+    };
   };
 }
 

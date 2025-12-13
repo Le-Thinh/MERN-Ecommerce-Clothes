@@ -13,13 +13,18 @@ import EmailVerified from "./pages/EmailVerified";
 import Cart from "./pages/Cart";
 import InfoAccount from "./pages/InfoAccount";
 import PurchaseHistory from "./components/user/PurchaseHistory";
+import ForgotPassword from "./pages/ForgotPassword";
+import ResetPassword from "./pages/ResetPassword";
 
 const App = () => {
   const location = useLocation();
 
-  const hideNavbar = ["/dang-nhap", "/dang-ky-tai-khoan"].includes(
-    location.pathname
-  );
+  const hideNavbar = [
+    "/dang-nhap",
+    "/dang-ky-tai-khoan",
+    "/quen-mat-khau",
+    "/user/password/reset",
+  ].includes(location.pathname);
 
   return (
     <div className="">
@@ -37,6 +42,8 @@ const App = () => {
           <Route path="/thong-tin" element={<InfoAccount />} />
           <Route path="/gio-hang" element={<Cart />} />
           <Route path="/lich-su-mua-hang" element={<PurchaseHistory />} />
+          <Route path="/quen-mat-khau" element={<ForgotPassword />} />
+          <Route path="/user/password/reset" element={<ResetPassword />} />
         </Routes>
       </div>
       <footer className="">

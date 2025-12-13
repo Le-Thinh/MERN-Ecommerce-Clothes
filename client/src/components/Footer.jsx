@@ -4,7 +4,7 @@ import { assets } from "../assets/assets";
 const Footer = () => {
   return (
     <>
-      <div className="border-t-[1px] border-t-[#ddd] w-full flex flex-col mt-10 items-center">
+      <div className="border-t-[1px] border-t-[#ddd] w-full flex flex-col items-center">
         <div className=" mt-5 my-auto mr-0">
           <img className="h-[70px] w-[70px] " src={assets.logobird} alt="" />
         </div>

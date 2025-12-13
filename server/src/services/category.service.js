@@ -155,21 +155,36 @@ class CategoryService {
 
     if (!allCat) throw new NotFoundError("NOT FOUND ANYTHING");
 
-    // return getInfoData({
-    //   fields: [
-    //     "_id",
-    //     "cat_id",
-    //     "cat_name",
-    //     "cat_description",
-    //     "cat_image",
-    //     "cat_parent",
-    //     "isDeleted",
-    //     "isPublished",
-    //     "isDraft",
-    //     "cat_slug",
-    //   ],
-    //   object: allCat,
-    // });
+    return allCat.map((cat) => ({
+      _id: cat._id,
+      cat_id: cat.cat_id,
+      cat_name: cat.cat_name,
+      cat_description: cat.cat_description,
+      cat_image: cat.cat_image,
+      cat_parent: cat.cat_parent?.cat_name || null,
+      isDeleted: cat.isDeleted,
+      isPublished: cat.isPublished,
+      isDraft: cat.isDraft,
+      cat_slug: cat.cat_slug,
+    }));
+  };
+
+  static getCategoryPublic = async ({ limit = 20, page = 1 }) => {
+    const skip = (page - 1) * limit;
+
+    const allCat = await CATEGORY.find({
+      isDeleted: false,
+      isPublished: true,
+    })
+      .populate({
+        path: "cat_parent",
+        select: "cat_name",
+      })
+      .skip(skip)
+      .limit(limit)
+      .lean();
+
+    if (!allCat) throw new NotFoundError("NOT FOUND ANYTHING");
 
     return allCat.map((cat) => ({
       _id: cat._id,

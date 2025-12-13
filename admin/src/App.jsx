@@ -1,5 +1,5 @@
 import React from "react";
-import { Router, Route, Routes } from "react-router-dom";
+import { Router, Route, Routes, Navigate } from "react-router-dom";
 import ScrollToTop from "./components/common/ScrollToTop";
 import Dashboard from "./pages/Dashboard";
 import Profile from "./pages/Profile";
@@ -21,6 +21,13 @@ import { useLoadingContext } from "./contexts";
 import LoadingSpinner from "./components/common/LoadingSpiner";
 import SpuDetail from "./components/product/SpuDetail";
 import EditSpu from "./components/product/EditSpu";
+import SignIn from "./pages/SignIn";
+import { isAuthenticated } from "./utils";
+import Order from "./pages/Order";
+
+const PrivateRoute = ({ children }) => {
+  return isAuthenticated() ? children : <Navigate to="/signin" replace />;
+};
 
 const App = () => {
   const { loading } = useLoadingContext();
@@ -41,34 +48,48 @@ const App = () => {
       />
       {loading && <LoadingSpinner />}
       <Routes>
-        {/* Routes sử dụng layout */}
-        <Route element={<AppLayout />}>
-          <Route path="/" element={<Dashboard />} />
-          <Route path="/profile" element={<Profile />} />
-          <Route path="/calendar" element={<Calendar />} />
-          {/* BEGIN: routes category */}
-          <Route path="/category" element={<Category />} />
-          <Route path="/new-category" element={<CreateCategory />} />
-          <Route path="/categories-deleted" element={<CategoryDeleted />} />
-          {/* END: routes category */}
-          {/* BEGIN: routes account */}
-          <Route path="/account">
+        <Route path="/signin" element={<SignIn />} />
+
+        <Route
+          path="/"
+          element={
+            <PrivateRoute>
+              <AppLayout />
+            </PrivateRoute>
+          }
+        >
+          <Route index element={<Dashboard />} />
+          <Route path="profile" element={<Profile />} />
+          <Route path="calendar" element={<Calendar />} />
+
+          {/* Category */}
+          <Route path="category" element={<Category />} />
+          <Route path="new-category" element={<CreateCategory />} />
+          <Route path="categories-deleted" element={<CategoryDeleted />} />
+
+          {/* Accounts */}
+          <Route path="account">
             <Route index element={<Account />} />
             <Route path="users" element={<ListUser />} />
             <Route path="employees" element={<ListEmployee />} />
             <Route path="users/update/:userId" element={<UpdateAccount />} />
           </Route>
-          {/* END: routes account */}
-          {/* BEGIN: routes products */}
-          <Route path="/products" element={<Product />} />
-          <Route path="/products/new-spu" element={<CreateSpu />} />
-          <Route path="/products/detail/:spuId" element={<SpuDetail />} />l
-          <Route path="/products/edit/:spuId" element={<EditSpu />} />l
-          {/* END: routes products */}
-          {/* BEGIN: routes products */}
-          <Route path="/attributes" element={<ListAttribute />} />
-          {/* END: routes products */}
+
+          {/* Products */}
+          <Route path="products" element={<Product />} />
+          <Route path="products/new-spu" element={<CreateSpu />} />
+          <Route path="products/detail/:spuId" element={<SpuDetail />} />
+          <Route path="products/edit/:spuId" element={<EditSpu />} />
+
+          {/* Attributes */}
+          <Route path="attributes" element={<ListAttribute />} />
+
+          {/* Orders */}
+          <Route path="orders" element={<Order />} />
         </Route>
+
+        {/* ------------------------ FALLBACK ----------------------------- */}
+        <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </>
   );

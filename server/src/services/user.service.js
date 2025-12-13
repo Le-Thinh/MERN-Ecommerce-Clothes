@@ -18,6 +18,8 @@ const {
   findUserByEmail,
   findUserByEmailV2,
   findUserById,
+  findAdminByEmail,
+  findUserByEmailForUpdate,
 } = require("../models/repositories/user.repo");
 const KeyTokenService = require("./keytoken.service");
 const { createTokenPair } = require("../auth/token.auth");
@@ -36,13 +38,28 @@ const publicKey = fs.readFileSync(publicKeyPath, "utf-8");
 
 class UserService {
   // Sign Up New Account --> Send Mail
-  static signUp = async ({ email, capcha = null }) => {
+  static signUp = async ({ email, capcha = null, password }) => {
     // 1. check email exists in dbs
     const user = await findUserByEmail({ email });
 
     if (user) {
       throw new BadRequestError("Email already exists");
     }
+
+    const passwordHash = await bcrypt.hash(password, 10);
+    const idRandom = crypto.randomInt(1000000000);
+    const userSlug = "usr-" + idRandom;
+
+    const newUser = await createUser({
+      usr_id: idRandom,
+      usr_slug: userSlug,
+      usr_name: email,
+      usr_email: email,
+      usr_password: passwordHash,
+      usr_role: "683bfc9dd286968af6cbfcaa",
+    });
+
+    if (!newUser) throw new BadRequestError("New user not created");
 
     // 2. send token via email user
     const result = await sendEmailToken({
@@ -63,82 +80,29 @@ class UserService {
     if (!email) throw new NotFoundError("Email token not found");
 
     // 2. check email exists in user model
+    const hasUser = await USERMODEL.findOne({ usr_email: email });
+    if (!hasUser) throw new NotFoundError("User not found");
 
-    const hasUser = await USERMODEL.findOne({ usr_email: email }).lean();
-    if (hasUser) throw new BadRequestError("Email already exists!!");
-
-    // hash password
-    const passwordHash = await bcrypt.hash(email, 10);
-    const idRandom = crypto.randomInt(1000000000);
-    const userSlug = "usr-" + idRandom;
-
-    const newUser = await createUser({
-      usr_id: idRandom,
-      usr_slug: userSlug,
-      usr_name: email,
-      usr_email: email,
-      usr_password: passwordHash,
-      usr_role: "683bfc9dd286968af6cbfcaa",
-    });
-
-    if (newUser) {
-      // Create publicKey and privateKey
-
-      // const { privateKey, publicKey } = crypto.generateKeyPairSync("rsa", {
-      //   modulusLength: 4096,
-      //   publicKeyEncoding: {
-      //     type: "pkcs1",
-      //     format: "pem",
-      //   },
-      //   privateKeyEncoding: {
-      //     type: "pkcs1",
-      //     format: "pem",
-      //   },
-      // });
-
-      const newUserIds = { _id: newUser._id, usr_id: newUser.usr_id };
-
-      const publicKeyString = await KeyTokenService.createKeyToken({
-        userId: newUserIds,
-        publicKey,
-      });
-
-      console.log("PublicKeyString:::: ", publicKeyString);
-
-      if (!publicKeyString) {
-        throw new BadRequestError("Error: Key Store could not be created");
-      }
-
-      const publicKeyObject = crypto.createPublicKey(publicKeyString);
-
-      if (!publicKeyObject) {
-        console.log("Error publicKeyObject:::: ");
-      }
-
-      const tokens = await createTokenPair(
-        {
-          userId: newUser._id,
-          email,
-        },
-        publicKeyObject,
-        privateKey
-      );
-
-      console.log(`Create Token Success:: `, tokens);
-      return {
-        user: getInfoData({
-          object: newUser,
-          fields: ["usr_id", "usr_name", "usr_email"],
-        }),
-        tokens,
-      };
-    }
+    //Active user
+    hasUser.usr_status = "active";
+    await hasUser.save();
+    return {
+      user: getInfoData({
+        object: hasUser,
+        fields: ["usr_id", "usr_name", "usr_email"],
+      }),
+    };
   };
 
   static login = async ({ email, password, refreshToken = null }) => {
     //1. Check Email exists in db??
     const foundUser = await findUserByEmail({ email });
     if (!foundUser) throw new NotFoundError("Invalid Email Or Password!");
+
+    if (foundUser.usr_status === "disable")
+      throw new BadRequestError(
+        "Your account locked, please contact us for support"
+      );
 
     //2. Match Password
     const matchPassword = await bcrypt.compare(
@@ -147,21 +111,7 @@ class UserService {
     );
     if (!matchPassword) throw new BadRequestError("Invalid Email Or Password!");
 
-    //3. create AT & RT then save dbs
-    // const { privateKey, publicKey } = crypto.generateKeyPairSync("rsa", {
-    //   modulusLength: 4096,
-    //   publicKeyEncoding: {
-    //     type: "pkcs1",
-    //     format: "pem",
-    //   },
-    //   privateKeyEncoding: {
-    //     type: "pkcs1",
-    //     format: "pem",
-    //   },
-    // });
-
-    // console.log(privateKey, publicKey);
-
+    //3. create access & refresh token
     const tokens = await createTokenPair(
       {
         userId: foundUser._id,
@@ -252,6 +202,22 @@ class UserService {
     };
   };
 
+  static resetPassword = async ({ token, newPass }) => {
+    const { otp_email: email, otp_token } = await checkEmailToken({ token });
+    if (!email) throw new NotFoundError("Email token not found");
+
+    const hasNewPassword = await bcrypt.hash(newPass, 10);
+    const foundUser = await findUserByEmailForUpdate({
+      email: email,
+    });
+
+    if (!foundUser) throw new NotFoundError("Email not found");
+
+    foundUser.usr_password = hasNewPassword;
+    await foundUser.save();
+    return 1;
+  };
+
   /*BEGIN: ADMIN */
   static getAllUser = ({ limit = 20, page = 1 }) => {
     const skip = (page - 1) * limit;
@@ -285,6 +251,54 @@ class UserService {
     if (!foundUser) throw new NotFoundError("User Not Found");
 
     return foundUser;
+  };
+
+  static getAmountUser = async () => {
+    const amountUser = await USERMODEL.estimatedDocumentCount();
+    return amountUser;
+  };
+
+  static loginWithAdmin = async ({ email, password, refreshToken = null }) => {
+    const foundUser = await findAdminByEmail({
+      email,
+      roleId: "683bfbd5d286968af6cbfc9e",
+    });
+    if (!foundUser) throw new NotFoundError("Invalid Email");
+
+    if (foundUser.usr_status === "disable")
+      throw new BadRequestError("Account Locked");
+
+    const matchPassword = await bcrypt.compare(
+      password,
+      foundUser.usr_password
+    );
+
+    if (!matchPassword) throw new BadRequestError("Invalid Email Or Password");
+    const tokens = await createTokenPair(
+      {
+        userId: foundUser._id,
+        email,
+      },
+      publicKey,
+      privateKey
+    );
+
+    const userIds = { _id: foundUser._id, usr_id: foundUser.usr_id };
+
+    await KeyTokenService.createKeyToken({
+      userId: userIds,
+      publicKey,
+      refreshToken: tokens.refreshToken,
+    });
+
+    return {
+      message: "Login Admin OK!",
+      metadata: getInfoData({
+        fields: ["_id", "usr_name", "usr_email"],
+        object: foundUser,
+      }),
+      tokens,
+    };
   };
   /*END: ADMIN */
 }

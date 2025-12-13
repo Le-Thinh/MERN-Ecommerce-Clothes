@@ -36,7 +36,6 @@ router.get(
   "/spu/getAllSku/:spuId",
   asyncHandler(productController.getAllSkuBySpuId)
 );
-
 router.post("/sku/publish/:skuId", asyncHandler(productController.publicSku));
 
 router.post(
@@ -50,5 +49,17 @@ router.post(
   "/spu/unPublish/:spuId",
   asyncHandler(productController.unPublicSpu)
 );
+
+/*BEGIN: SEARCH PRODUCT */
+router.get(
+  "/spu/search/:keySearch",
+  asyncHandler(productController.getListSearchProductByUser)
+);
+
+router.get(
+  "/spu/searchAd/:keySearch",
+  asyncHandler(productController.getListSearchProductByAdmin)
+);
+/*END: SEARCH PRODUCT */
 
 module.exports = router;

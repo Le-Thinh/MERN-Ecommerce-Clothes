@@ -1,7 +1,40 @@
 import React from "react";
 import Badge from "../ui/badge/Badge";
+import { useState } from "react";
+import { getAmountUsers } from "../../api/user.api";
+import { useEffect } from "react";
+import { useLoadingContext } from "../../contexts";
+import { getAmountOrders } from "../../api/order.api";
 
 const EcommerceMetrics = () => {
+  const [amountUsers, setAmountUser] = useState(0);
+  const [amountOrders, setAmountOrders] = useState(0);
+  const { setLoading } = useLoadingContext();
+
+  const fetchData = async () => {
+    setLoading(true);
+
+    const clientId = localStorage.getItem("x-client-id");
+    const accessToken = localStorage.getItem("authorization");
+
+    try {
+      const resAmountUsers = await getAmountUsers(clientId, accessToken);
+      const resAmountOrders = await getAmountOrders(clientId, accessToken);
+      if (resAmountUsers && resAmountOrders) {
+        setAmountUser(resAmountUsers.data.metadata);
+        setAmountOrders(resAmountOrders.data.metadata);
+      }
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
   return (
     <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:gap-6">
       {/* BEGIN: METRIC ITEMS */}
@@ -29,7 +62,7 @@ const EcommerceMetrics = () => {
               Customers
             </span>
             <h4 className="mt-2 font-bold text-gray-800 text-title-sm dark:text-white/90">
-              3,782
+              {amountUsers}
             </h4>
           </div>
           <Badge color="success">
@@ -79,7 +112,7 @@ const EcommerceMetrics = () => {
               Orders
             </span>
             <h4 className="mt-2 font-bold text-gray-800 text-title-sm dark:text-white/90">
-              5,359
+              {amountOrders}
             </h4>
           </div>
           <Badge color="error">

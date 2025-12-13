@@ -51,7 +51,10 @@ request.interceptors.response.use(
         const accessToken = localStorage.getItem("authorization");
 
         if (!refreshToken) {
-          throw new Error("Missing refresh token");
+          localStorage.removeItem("x-client-id");
+          localStorage.removeItem("authorization");
+          window.location.href = "/signin";
+          return Promise.reject(new Error("Refresh token not found"));
         }
 
         if (!clientId) {
@@ -60,7 +63,7 @@ request.interceptors.response.use(
 
         // Gọi API refresh token với đủ 3 headers
         const res = await request.post(
-          "v1/api/user/refreshTokenUser",
+          `v1/api/user/refreshTokenUser`,
           {},
           {
             headers: {
@@ -82,7 +85,7 @@ request.interceptors.response.use(
       } catch (err) {
         if (err.response?.status === 401 || err.response?.status === 403) {
           localStorage.clear();
-          window.location.href = "/login";
+          window.location.href = "/signin";
         }
 
         return Promise.reject(err);

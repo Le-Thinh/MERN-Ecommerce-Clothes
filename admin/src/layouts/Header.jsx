@@ -5,10 +5,27 @@ import ThemeToggleButton from "../components/common/ThemeToggleButton";
 import { useSidebar } from "../contexts";
 import { useRef } from "react";
 import { Link } from "react-router";
+import { searchProduct } from "../api/product.api";
 
 const Header = () => {
   const [isApplicationMenuOpen, setApplicationMenuOpen] = useState(false);
   const { isMobileOpen, toggleSidebar, toggleMobileSidebar } = useSidebar();
+  const [searchResults, setSearchResults] = useState([]);
+  const [searching, setSearching] = useState(false);
+
+  const handleSearchProduct = async (keySearch) => {
+    if (!keySearch.trim()) return;
+
+    try {
+      setSearching(true);
+      const res = await searchProduct(keySearch);
+      setSearchResults(res.data || []);
+    } catch (error) {
+      console.error("Search error:", error);
+    } finally {
+      setSearching(false);
+    }
+  };
 
   const handleToggle = () => {
     console.log("Toggle clicked");
@@ -36,6 +53,18 @@ const Header = () => {
   const toggleApplicationMenu = () => {
     setApplicationMenuOpen(!isApplicationMenuOpen);
   };
+
+  useEffect(() => {
+    const delayDebounce = setTimeout(() => {
+      if (inputRef.current?.value) {
+        handleSearchProduct(inputRef.current.value);
+      } else {
+        setSearchResults([]); // Clear when input is empty
+      }
+    }, 500); // debounce 500ms
+
+    return () => clearTimeout(delayDebounce);
+  }, [inputRef.current?.value]);
 
   return (
     <header className="sticky top-0 flex w-full bg-white border-gray-200 z-99 dark:border-gray-800 dark:bg-gray-900 lg:border-b">
@@ -124,6 +153,26 @@ const Header = () => {
                   <span>K</span>
                 </button>
               </div>
+              {searchResults.length > 0 && (
+                <div className="absolute top-full mt-2 w-[430px] bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded shadow-lg z-50">
+                  {searchResults.map((item) => (
+                    <div
+                      key={item._id}
+                      className="p-2 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700"
+                      onClick={() => {
+                        window.location.href = `/product/detail/${item._id}`;
+                      }}
+                    >
+                      <p className="text-sm font-medium text-gray-900 dark:text-white">
+                        {item.product_name}
+                      </p>
+                      <p className="text-xs text-gray-500 dark:text-gray-300">
+                        {item.product_description}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              )}
             </form>
           </div>
         </div>

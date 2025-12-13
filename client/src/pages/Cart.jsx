@@ -23,21 +23,22 @@ const Cart = () => {
   const { cart, setCart, discountCode, setDiscountCode } = useShopContext();
   const [cartId, setCartId] = useState("");
   const [selectedProvince, setSelectedProvince] = useState("");
-  const [selectedDistrict, setSelectedDistrict] = useState("");
   const [selectedWard, setSelectedWard] = useState("");
   const [location, setLocation] = useState("");
   const [isAddressVisible, setIsAddressVisible] = useState(false);
   const [totalPrice, setTotalPrice] = useState(0);
   const [phone, setPhone] = useState("");
 
-  const provinces = Object.keys(locationData);
-  const districts = selectedProvince
-    ? Object.keys(locationData[selectedProvince])
+  const provinces = locationData.map((p) => ({
+    code: p.province_code,
+    name: p.name,
+  }));
+
+  const wards = selectedProvince
+    ? locationData.find((p) => p.province_code === selectedProvince)?.wards ||
+      []
     : [];
-  const wards =
-    selectedProvince && selectedDistrict
-      ? locationData[selectedProvince][selectedDistrict]
-      : [];
+
   const navigate = useNavigate();
 
   const fetchListCart = async () => {
@@ -56,6 +57,7 @@ const Cart = () => {
       if (res.data) {
         setCart(res.data.metadata?.cart_products || []);
         setCartId(res.data.metadata?._id || "");
+        console.log(cart);
       } else {
         toast.error("Fetch Data Failure");
       }
@@ -140,18 +142,11 @@ const Cart = () => {
     const checkoutAddress = {
       phone: phone,
       province: selectedProvince,
-      district: selectedDistrict,
       ward: selectedWard,
       location: location,
     };
 
-    if (
-      !selectedProvince ||
-      !selectedDistrict ||
-      !selectedWard ||
-      !location ||
-      !phone
-    ) {
+    if (!selectedProvince || !selectedWard || !location || !phone) {
       toast.warning("Vui lòng nhập đầy đủ địa chỉ giao hàng!");
       return;
     }
@@ -249,9 +244,13 @@ const Cart = () => {
                         <span className="barlow3 text-xs text-[#1D2630]">
                           {item.name}
                         </span>
-                        <span className="barlow3 text-xs text-start text-[#39475F]">
-                          Size:{item.option}
-                        </span>
+                        {item.option ? (
+                          <span className="barlow3 text-xs text-start text-[#39475F]">
+                            Size:{item.option}
+                          </span>
+                        ) : (
+                          <></>
+                        )}
                       </div>
                     </TableCell>
 
@@ -336,7 +335,7 @@ const Cart = () => {
                     </label>
                     <div className="flex-[0_0_auto] w-[66%]">
                       <input
-                        className="rounded-lg border border-[#6b7280] px-3 py-2 w-full"
+                        className="barlow3 rounded-lg border border-[#6b7280] px-3 py-2 w-full"
                         type="tel"
                         onChange={(e) => setPhone(e.target.value)}
                         value={phone}
@@ -355,14 +354,13 @@ const Cart = () => {
                           value={selectedProvince}
                           onChange={(e) => {
                             setSelectedProvince(e.target.value);
-                            setSelectedDistrict("");
                             setSelectedWard("");
                           }}
                         >
                           <option value="">Tỉnh/Thành phố</option>
                           {provinces.map((prov) => (
-                            <option key={prov} value={prov}>
-                              {prov}
+                            <option key={prov.code} value={prov.code}>
+                              {prov.name}
                             </option>
                           ))}
                         </select>
@@ -384,52 +382,19 @@ const Cart = () => {
                       </div>
 
                       {/* District */}
-                      <div className="relative w-full">
-                        <select
-                          className="w-full px-4 py-3 border rounded barlow3 text-[#5B6B79] appearance-none"
-                          value={selectedDistrict}
-                          onChange={(e) => {
-                            setSelectedDistrict(e.target.value);
-                            setSelectedWard("");
-                          }}
-                          disabled={!selectedProvince}
-                        >
-                          <option value="">Quận/Huyện</option>
-                          {districts.map((dist) => (
-                            <option key={dist} value={dist}>
-                              {dist}
-                            </option>
-                          ))}
-                        </select>
-                        <div className="pointer-events-none absolute inset-y-0 right-3 flex items-center text-gray-500">
-                          <svg
-                            className="w-4 h-4"
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              strokeWidth="2"
-                              d="M19 9l-7 7-7-7"
-                            />
-                          </svg>
-                        </div>
-                      </div>
 
                       {/* Ward */}
                       <div className="relative w-full">
                         <select
-                          className="w-full px-4 py-3 border rounded barlow3 text-[#5B6B79] appearance-none"
+                          className="w-full px-4 py-3 barlow3 border rounded barlow3 text-[#5B6B79] appearance-none"
                           value={selectedWard}
                           onChange={(e) => setSelectedWard(e.target.value)}
-                          disabled={!selectedDistrict}
+                          disabled={!selectedProvince}
                         >
                           <option value="">Phường/Xã</option>
                           {wards.map((ward) => (
-                            <option key={ward} value={ward}>
-                              {ward}
+                            <option key={ward.ward_code} value={ward.ward_code}>
+                              {ward.name}
                             </option>
                           ))}
                         </select>

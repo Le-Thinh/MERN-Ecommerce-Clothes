@@ -112,6 +112,20 @@ class ProductController {
       }),
     }).send(res);
   };
+
+  getListSearchProductByUser = async (req, res, next) => {
+    new SuccessResponse({
+      message: "SEARCH SPU-SKU OK!",
+      metadata: await SPUService.searchSpuByUser(req.params),
+    }).send(res);
+  };
+
+  getListSearchProductByAdmin = async (req, res, next) => {
+    new SuccessResponse({
+      message: "SEARCH SPU-SKU OK!",
+      metadata: await SPUService.searchSpuByAdmin(req.params),
+    }).send(res);
+  };
 }
 
 module.exports = new ProductController();

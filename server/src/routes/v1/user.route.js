@@ -6,12 +6,22 @@ const asyncHandler = require("../../helpers/asyncHandler.helper");
 const { authentication } = require("../../auth/authUtils");
 const router = express.Router();
 
-router.post("/new-user", asyncHandler(userController.newUser));
-router.post("/login", asyncHandler(userController.login));
 router.get(
   "/welcome-back",
   asyncHandler(userController.checkRegisterEmailToken)
 );
+router.post(
+  "/send-mail-repass",
+  asyncHandler(userController.sendMailResetPassword)
+);
+
+router.post("/reset-password", asyncHandler(userController.resetPassword));
+
+router.post("/new-user", asyncHandler(userController.newUser));
+router.post("/login", asyncHandler(userController.login));
+router.post("/loginWithAdmin", asyncHandler(userController.loginWithAdmin));
+router.get("/getAmountUsers", asyncHandler(userController.getAmountUser));
+
 router.get("/getAllUsers", asyncHandler(userController.getAllUser));
 router.get("/getUserByAd/:id", asyncHandler(userController.getUserByAdmin));
 router.post("/changeStatus/:id", asyncHandler(userController.changeStatusUser));

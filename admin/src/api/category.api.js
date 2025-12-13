@@ -10,6 +10,12 @@ export const getAllCategory = async () => {
   return response;
 };
 
+export const getCategoryPublic = async () => {
+  const response = await request.get(`${URL_BASE_CAT}/getCatPub`);
+
+  return response;
+};
+
 export const getAllCategoryDeleted = async () => {
   const response = await request.get(`${URL_BASE_CAT}/getCategoryDeleted`);
 

@@ -2,15 +2,23 @@ import React, { useState } from "react";
 import { assets } from "../assets/assets";
 import { toast } from "react-toastify";
 import { signUp } from "../api/user.api";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 const Register = () => {
   const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const navigate = useNavigate();
 
   const handleRegister = async (e) => {
     e.preventDefault();
 
     if (!email) {
       toast.warn("Vui lòng nhập email");
+      return;
+    }
+
+    if (password !== confirmPassword) {
+      toast.warning("Mật khẩu không khớp");
       return;
     }
 
@@ -21,10 +29,11 @@ const Register = () => {
     }
 
     try {
-      const response = await signUp(email);
+      const response = await signUp(email, password);
 
       if (response.data.message) {
         toast.success("Sent email verify");
+        navigate("/");
       } else {
         toast.error("Invalid Email");
       }
@@ -50,14 +59,44 @@ const Register = () => {
         </h1>
         <div className="mt-5 flex flex-col">
           <form onSubmit={handleRegister} className="flex flex-col gap-5">
-            <div className="flex flex-col">
+            <div className="flex flex-col gap-5">
               <input
-                placeholder="Vui lòng nhập email đăng ký"
+                placeholder="Email"
                 onChange={(e) => setEmail(e.target.value)}
                 value={email}
                 className="w-full px-2 py-2.5 rounded border border-[#eadbdb]"
                 type="email"
                 id="email"
+              />
+
+              <input
+                placeholder="Password"
+                onChange={(e) => setPassword(e.target.value)}
+                value={password}
+                className={`w-full px-2 py-2.5 rounded border  ${
+                  password === ""
+                    ? "border-[#eadbdb]"
+                    : confirmPassword === password
+                    ? "border-green-400"
+                    : "border-red-400"
+                }`}
+                type="password"
+                id="password"
+              />
+
+              <input
+                placeholder="Confirm Password"
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                value={confirmPassword}
+                className={`w-full px-2 py-2.5 rounded border  ${
+                  confirmPassword === ""
+                    ? " border-[#eadbdb]"
+                    : confirmPassword === password
+                    ? "border-green-400"
+                    : "border-red-400"
+                }`}
+                type="password"
+                id="confirmPassword"
               />
             </div>
 

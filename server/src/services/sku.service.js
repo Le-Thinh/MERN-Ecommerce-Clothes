@@ -31,8 +31,8 @@ class SKUService {
 
   static updateSku = async ({ spu_id, sku_list }) => {
     try {
-      const updatePromises = sku_list.map(({ sku_id, ...rest }) =>
-        SKU.findOneAndUpdate({ sku_id: sku_id }, { $set: rest }, { new: true })
+      const updatePromises = sku_list.map(({ _id, ...rest }) =>
+        SKU.findOneAndUpdate({ _id }, { $set: rest }, { new: true })
       );
 
       const results = await Promise.all(updatePromises);
@@ -65,6 +65,20 @@ class SKUService {
     try {
       // 1. spu_id...
       const skus = await SKU.find({ sku_product_id: sku_product_id }).lean();
+
+      return skus;
+    } catch (error) {
+      return [];
+    }
+  };
+
+  static allSkuByClientShop = async ({ sku_product_id }) => {
+    try {
+      // 1. spu_id...
+      const skus = await SKU.find({
+        sku_product_id: sku_product_id,
+        isPublished: true,
+      }).lean();
 
       return skus;
     } catch (error) {

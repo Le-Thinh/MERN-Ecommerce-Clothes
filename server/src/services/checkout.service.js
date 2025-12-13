@@ -84,8 +84,6 @@ class CheckoutService {
 
     const totalCheckout = totalPrice - discount;
 
-    console.log("validatedProducts::::", validatedProducts);
-
     return {
       products: validatedProducts,
       summary: {
@@ -167,6 +165,13 @@ class CheckoutService {
 
     return foundOrder;
   };
+
+  /*BEGIN: ADMIN */
+  static getAmountOrders = async () => {
+    const amountOrders = await order.estimatedDocumentCount();
+    return amountOrders;
+  };
+  /*END: ADMIN */
 }
 
 module.exports = CheckoutService;

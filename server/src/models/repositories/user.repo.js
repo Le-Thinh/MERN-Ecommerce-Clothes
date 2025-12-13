@@ -18,6 +18,7 @@ const createUser = async ({
     usr_slug,
     usr_password,
     usr_role,
+    usr_status: "pending",
   });
 
   return user;
@@ -25,6 +26,23 @@ const createUser = async ({
 
 const findUserByEmail = async ({ email }) => {
   const user = await USER.findOne({ usr_email: email }).lean();
+  return user;
+};
+
+const findAdminByEmail = async ({ email, roleId }) => {
+  const foundUser = await USER.findOne({
+    usr_email: email,
+    usr_role: convertToObjectIdMongodb(roleId),
+  }).lean();
+
+  return foundUser;
+};
+
+const findUserByEmailActive = async ({ email }) => {
+  const user = await USER.findOne({
+    usr_email: email,
+    usr_status: true,
+  }).lean();
   return user;
 };
 
@@ -42,6 +60,10 @@ const findUserByEmailV2 = async ({
   return USER.findOne({ usr_email: email }).select(select).lean();
 };
 
+const findUserByEmailForUpdate = async ({ email }) => {
+  return USER.findOne({ usr_email: email });
+};
+
 const findUserById = async ({ id }) => {
   const userId = convertToObjectIdMongodb(id);
 
@@ -55,4 +77,7 @@ module.exports = {
   findUserByEmail,
   findUserByEmailV2,
   findUserById,
+  findUserByEmailActive,
+  findAdminByEmail,
+  findUserByEmailForUpdate,
 };

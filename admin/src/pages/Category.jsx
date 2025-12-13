@@ -1,32 +1,35 @@
 import React, { useEffect, useState } from "react";
 import ListCategory from "../components/category/ListCategory";
 import UpdateCategory from "../components/category/UpdateCategory";
-import { useShopContext } from "../contexts";
+import { useLoadingContext, useShopContext } from "../contexts";
 import { getAllCategory } from "../api/category.api";
 import { toast } from "react-toastify";
 import CreateCategory from "../components/category/CreateCategory";
 import { Link } from "react-router-dom";
+import PageMeta from "../components/common/PageMeta";
+import PageBreadcrumb from "../components/common/PageBreadcrumb";
+import ComponentCard from "../components/common/ComponentCard";
 
 const Category = () => {
   const { categories, setCategory } = useShopContext();
   const [editingCategory, setEditingCategory] = useState(null);
   const [showFormUpdate, setShowFormUpdate] = useState(false);
   const [showFormCreate, setShowFormCreate] = useState(false);
-
+  const { setLoading } = useLoadingContext();
   const fetchCategories = async () => {
+    setLoading(true);
     try {
       const res = await getAllCategory();
       const categoriesFromAPI = res?.data?.metadata || [];
       setCategory(categoriesFromAPI);
+      console.log("categories::::", categoriesFromAPI);
     } catch (error) {
       console.error(error);
       toast.error("Invalid Request Category");
+    } finally {
+      setLoading(false);
     }
   };
-
-  useEffect(() => {
-    fetchCategories();
-  }, [setCategory]);
 
   const handleEdit = (category) => {
     setEditingCategory(category);
@@ -57,43 +60,46 @@ const Category = () => {
     setShowFormUpdate(false);
   };
 
-  return (
-    <div className="p-4 bg-white border-1 rounded shadow">
-      <h2 className="text-2xl font-bold mb-4">List Category</h2>
+  useEffect(() => {
+    fetchCategories();
+  }, []);
 
-      {!showFormUpdate && (
-        <>
-          <div className="flex items-center justify-between mb-5">
-            <div></div>
-            <div>
+  return (
+    <>
+      <PageMeta title="Categories" description="Manage categories" />
+      <PageBreadcrumb pageTitle="Categories" />
+
+      <ComponentCard title="Categories">
+        {!showFormUpdate ? (
+          <>
+            {/* Header */}
+            <div className="flex justify-between items-center mb-5">
+              <div></div>
               <Link
                 to="/new-category"
-                className="mb-4 px-4 py-2 bg-blue-600 text-white rounded relative right-0"
+                className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-all duration-300"
               >
-                + New
+                + New Category
               </Link>
             </div>
-          </div>
 
-          <ListCategory
-            categories={categories}
-            onEdit={handleEdit}
-            onDelete={handleDelete}
-            onRefresh={fetchCategories}
+            {/* List */}
+            <ListCategory
+              categories={categories}
+              onEdit={handleEdit}
+              onDelete={handleDelete}
+              onRefresh={fetchCategories}
+            />
+          </>
+        ) : (
+          <UpdateCategory
+            category={editingCategory}
+            onCancel={() => setShowFormUpdate(false)}
+            onSubmit={() => setShowFormUpdate(false)}
           />
-        </>
-      )}
-
-      {showFormUpdate && (
-        <UpdateCategory
-          category={editingCategory}
-          onCancel={() => setShowFormUpdate(false)}
-          onSubmit={handleFormSubmit}
-        />
-      )}
-
-      {showFormCreate && <CreateCategory />}
-    </div>
+        )}
+      </ComponentCard>
+    </>
   );
 };
 

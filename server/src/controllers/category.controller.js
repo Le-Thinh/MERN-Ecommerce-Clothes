@@ -64,6 +64,13 @@ class CategoryController {
     }).send(res);
   };
 
+  getCategoryPublic = async (req, res, next) => {
+    new SuccessResponse({
+      message: "Get Cat Successfully",
+      metadata: await CategoryService.getCategoryPublic(req.query),
+    }).send(res);
+  };
+
   getAllCategoryDelete = async (req, res, next) => {
     new SuccessResponse({
       message: "Get Category Deleted Successfully",

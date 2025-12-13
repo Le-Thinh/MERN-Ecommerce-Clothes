@@ -14,19 +14,28 @@ import { useLoadingContext, useShopContext } from "../contexts";
 import { toast } from "react-toastify";
 import { getAllSpus } from "../api/product.api";
 import { useEffect } from "react";
+import { useState } from "react";
 
 const Product = () => {
   const { spus, setSpus } = useShopContext();
   const { setLoading } = useLoadingContext();
   const navigate = useNavigate();
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const limit = 10;
 
-  const fetchSpu = async () => {
+  const fetchSpu = async (page) => {
     setLoading(true);
     try {
-      const res = await getAllSpus();
+      const skip = (page - 1) * limit;
+      const res = await getAllSpus({ limit, skip });
       if (res) {
-        const dataSpu = res.data?.metadata || [];
+        const dataSpu = res.data?.metadata.spus || [];
+        const total = res.data?.metadata.totalPages || 1;
+        setTotalPages(total);
         setSpus(dataSpu);
+        console.log("Fetching dât:", dataSpu);
+        return;
       } else {
         toast.error("Fetch Data Attribute Failure");
       }
@@ -38,9 +47,15 @@ const Product = () => {
     }
   };
 
+  const handlePageChange = (newPage) => {
+    if (newPage >= 1 && newPage <= totalPages) {
+      setPage(newPage);
+    }
+  };
+
   useEffect(() => {
-    fetchSpu();
-  }, [setSpus]);
+    fetchSpu(page);
+  }, [page]);
 
   return (
     <>
@@ -132,7 +147,7 @@ const Product = () => {
                   spus.map((spu, index) => (
                     <TableRow
                       onClick={() => navigate(`detail/${spu._id}`)}
-                      className={`hover:bg-gray-200/95 duration-200 cursor-pointer ${
+                      className={`hover:bg-gray-200/95 dark:hover:bg-[#7592ff]/20 duration-200 cursor-pointer ${
                         spu.isDraft ? "bg-red-300" : null
                       }`}
                       key={index}
@@ -202,6 +217,26 @@ const Product = () => {
                   ))}
               </TableBody>
             </Table>
+          </div>
+          {/* PAGINATION */}
+          <div className="flex justify-center mt-5 gap-4 items-center">
+            <button
+              onClick={() => handlePageChange(page - 1)}
+              className="px-4 py-2 bg-blue-500 text-white rounded disabled:opacity-50"
+              disabled={page === 1}
+            >
+              Trang trước
+            </button>
+            <span className="text-gray-700 dark:text-white/90">
+              Trang {page} / {totalPages}
+            </span>
+            <button
+              onClick={() => handlePageChange(page + 1)}
+              className="px-4 py-2 bg-blue-500 text-white rounded disabled:opacity-50"
+              disabled={page === totalPages}
+            >
+              Trang sau
+            </button>
           </div>
         </div>
       </ComponentCard>

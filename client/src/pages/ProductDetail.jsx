@@ -31,6 +31,7 @@ const ProductDetail = () => {
         });
         setSpu(dataSPU);
         setSkuList(sortedSkuList);
+        console.log(spu);
       } else {
         toast.error("Fetch Data Failure");
       }
@@ -49,27 +50,47 @@ const ProductDetail = () => {
       navigate("/dang-nhap");
       return;
     }
+    var product;
 
-    if (selectedSkuIndex === null || !skuList[selectedSkuIndex]) {
-      toast.warn(
-        "Vui lòng chọn phân loại sản phẩm trước khi thêm vào giỏ hàng!"
-      );
-      return;
+    if (spu.product_variations?.length) {
+      if (selectedSkuIndex === null || !skuList[selectedSkuIndex]) {
+        toast.warn(
+          "Vui lòng chọn phân loại sản phẩm trước khi thêm vào giỏ hàng!"
+        );
+        return;
+      }
+      const selectedSku = skuList[selectedSkuIndex];
+
+      if (selectedSku.sku_stock < 1) {
+        toast.error("Sản phẩm hiện đã hết");
+        return;
+      }
+      const label =
+        spu.product_variations?.[0]?.options?.[selectedSku.sku_tier_idx[0]];
+
+      console.log(selectedSku);
+
+      product = {
+        sku_id: selectedSku.sku_id,
+        quantity: 1,
+        name: spu.product_name,
+        price: selectedSku.sku_price,
+        thumb: spu.product_thumb?.[0],
+        option: label,
+      };
+    } else {
+      if (spu.product_quantity < 1) {
+        toast.error("Sản phẩm hiện đã hết");
+        return;
+      }
+      product = {
+        sku_id: spu.product_id,
+        quantity: 1,
+        name: spu.product_name,
+        price: spu.product_price,
+        thumb: spu.product_thumb?.[0],
+      };
     }
-
-    const selectedSku = skuList[selectedSkuIndex];
-
-    const label =
-      spu.product_variations?.[0]?.options?.[selectedSku.sku_tier_idx[0]];
-
-    const product = {
-      sku_id: selectedSku.sku_id,
-      quantity: 1,
-      name: spu.product_name,
-      price: selectedSku.sku_price,
-      thumb: spu.product_thumb?.[0],
-      option: label,
-    };
 
     try {
       const res = await addToCart(clientId, accessToken, product);

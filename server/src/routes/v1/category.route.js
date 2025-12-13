@@ -24,6 +24,7 @@ router.patch(
 );
 
 router.get("/getAllCats", asyncHandler(categoryController.getAllCategory));
+router.get("/getCatPub", asyncHandler(categoryController.getCategoryPublic));
 router.get(
   "/getCategoryDeleted",
   asyncHandler(categoryController.getAllCategoryDelete)

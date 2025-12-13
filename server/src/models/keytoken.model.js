@@ -15,7 +15,7 @@ var keySchema = new Schema(
     },
     usr_id: {
       type: Number,
-      require: true,
+      required: true,
       unique: true,
     },
     privateKey: {
