@@ -5,8 +5,8 @@ const {
   db: { host, port, name },
 } = require("../configs/mongodb.config");
 
-const connectString = `mongodb://${host}:${port}/${name}`;
-console.log("ConnectString::::", connectString);
+// const connectString = `mongodb://${host}:${port}/${name}`;
+const connectString = process.env.URL_MONGODB_ATLAS;
 
 class Database {
   constructor() {

@@ -3,19 +3,21 @@
 const { ReasonPhrases, StatusCodes } = require("../utils/httpStatusCode");
 
 class ErrorResponse extends Error {
-  constructor(message, statusCode) {
+  constructor(message, statusCode, value) {
     super(message);
     this.statusCode = statusCode;
     this.now = Date.now();
+    this.value = value;
   }
 }
 
 class BadRequestError extends ErrorResponse {
   constructor(
     message = ReasonPhrases.BAD_REQUEST,
-    statusCode = StatusCodes.BAD_REQUEST
+    statusCode = StatusCodes.BAD_REQUEST,
+    value
   ) {
-    super(message, statusCode);
+    super(message, statusCode, value);
   }
 }
 

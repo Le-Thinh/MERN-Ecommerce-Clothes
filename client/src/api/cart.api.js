@@ -53,11 +53,17 @@ export const updateQuantityCart = async (
   return response;
 };
 
-export const deleteProductFromCart = async (userId, accessToken, sku_id) => {
+export const deleteProductFromCart = async (
+  userId,
+  accessToken,
+  sku_id,
+  product_id
+) => {
   const response = await request.post(
     `${URL_BASE_CART}/deleteProductFromCart`,
     {
       sku_id,
+      product_id,
     },
     {
       headers: {

@@ -7,20 +7,71 @@ const getSkuById = async (skuId) => {
   return await SKU.findOne({ sku_id: skuId }).lean();
 };
 
+const getSpuById = async (productId) => {
+  return await SPU.findOne({ product_id: productId }).lean();
+};
+
+const reduceSkuStock = async ({ skuId, quantity, session }) => {
+  const updatedSku = await SKU.findOneAndUpdate(
+    {
+      sku_id: skuId,
+      sku_stock: { $gte: quantity },
+    },
+    {
+      $inc: { sku_stock: -quantity },
+    },
+    { new: true, session }
+  );
+
+  return updatedSku;
+};
+
 const checkProductByServer = async (products) => {
-  return await Promise.all(
+  const result = await Promise.all(
     products.map(async (product) => {
-      const foundProduct = await getSkuById(product.sku_id);
-      if (foundProduct) {
+      if (product.sku_id) {
+        const sku = await getSkuById(product.sku_id);
+        if (!sku) throw new BadRequestError("SKU không tồn tại");
+
+        if (sku.sku_stock < product.quantity) {
+          throw new BadRequestError("Không đủ tồn kho", 400, {
+            sku_id: sku.sku_id,
+            requested: product.quantity,
+            available: sku.sku_stock,
+          });
+        }
+
         return {
-          price: Number(foundProduct.sku_price),
-          quantity: product.sku_stock,
-          skuId: product.sku_id,
+          type: "SKU",
+          skuId: sku.sku_id,
+          productId: sku.sku_product_id,
+          price: Number(sku.sku_price),
+          quantity: Number(product.quantity),
         };
       }
-      console.log(foundProduct);
+
+      const spu = await getSpuById(product.product_id);
+      if (!spu) throw new BadRequestError("Sản phẩm không tồn tại");
+
+      if (spu.product_quantity < product.quantity) {
+        throw new BadRequestError("Không đủ tồn kho", 400, {
+          product_id: spu.product_id,
+          requested: product.quantity,
+          available: spu.product_quantity,
+        });
+      }
+
+      return {
+        type: "SPU",
+        skuId: null,
+        productId: spu.product_id,
+        price: Number(spu.product_price),
+        quantity: Number(product.quantity),
+      };
     })
   );
+
+  return result;
 };
 
 const searchProductByUser = async ({ keySearch }) => {
@@ -50,4 +101,6 @@ module.exports = {
   checkProductByServer,
   searchProductByUser,
   searchProductByAdmin,
+  reduceSkuStock,
+  getSpuById,
 };

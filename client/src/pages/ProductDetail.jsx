@@ -31,7 +31,6 @@ const ProductDetail = () => {
         });
         setSpu(dataSPU);
         setSkuList(sortedSkuList);
-        console.log(spu);
       } else {
         toast.error("Fetch Data Failure");
       }
@@ -68,8 +67,6 @@ const ProductDetail = () => {
       const label =
         spu.product_variations?.[0]?.options?.[selectedSku.sku_tier_idx[0]];
 
-      console.log(selectedSku);
-
       product = {
         sku_id: selectedSku.sku_id,
         quantity: 1,
@@ -84,7 +81,7 @@ const ProductDetail = () => {
         return;
       }
       product = {
-        sku_id: spu.product_id,
+        product_id: spu.product_id,
         quantity: 1,
         name: spu.product_name,
         price: spu.product_price,

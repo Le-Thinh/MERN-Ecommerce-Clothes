@@ -57,7 +57,6 @@ const Cart = () => {
       if (res.data) {
         setCart(res.data.metadata?.cart_products || []);
         setCartId(res.data.metadata?._id || "");
-        console.log(cart);
       } else {
         toast.error("Fetch Data Failure");
       }
@@ -95,7 +94,7 @@ const Cart = () => {
     }
   };
 
-  const handleDeleteProductCart = async (skuId) => {
+  const handleDeleteProductCart = async (skuId, productId) => {
     const clientId = localStorage.getItem("x-client-id");
     const accessToken = localStorage.getItem("authorization");
 
@@ -117,7 +116,12 @@ const Cart = () => {
     if (!result.isConfirmed) return;
 
     try {
-      const res = await deleteProductFromCart(clientId, accessToken, skuId);
+      const res = await deleteProductFromCart(
+        clientId,
+        accessToken,
+        skuId,
+        productId
+      );
       if (res.data) {
         fetchListCart?.();
       } else {
@@ -167,8 +171,13 @@ const Cart = () => {
         toast.error("Lỗi đặt hàng");
       }
     } catch (error) {
-      console.log(error);
-      toast.error("Invalid Checkout From Cart");
+      const message = error?.response?.data?.message;
+
+      if (message === "Invalid Stock") {
+        toast.error("Sản phẩm trong giỏ không đủ tồn kho!");
+      } else {
+        toast.error(message || "Đặt hàng thất bại");
+      }
     }
   };
 
@@ -291,7 +300,9 @@ const Cart = () => {
 
                     <TableCell>
                       <button
-                        onClick={() => handleDeleteProductCart(item.sku_id)}
+                        onClick={() =>
+                          handleDeleteProductCart(item.sku_id, item.product_id)
+                        }
                         className="text-[#1D2630] barlow3 cursor-pointer  rounded px-2 py-2 flex justify-center hover:bg-red-200/50 hover:fill-red-500 duration-200"
                       >
                         <svg

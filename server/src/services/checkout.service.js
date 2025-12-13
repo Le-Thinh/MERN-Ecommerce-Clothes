@@ -2,11 +2,16 @@
 
 const { cart } = require("../models/cart.model");
 const { findCartById } = require("../models/repositories/cart.repo");
-const { checkProductByServer } = require("../models/repositories/product.repo");
+const {
+  checkProductByServer,
+  reduceSkuStock,
+} = require("../models/repositories/product.repo");
 const { convertToObjectIdMongodb } = require("../utils");
 const USER = require("../models/user.model");
+const SPU = require("../models/spu.model");
 const { order } = require("../models/order.model");
 const { NotFoundError, BadRequestError } = require("../core/error.response");
+const mongoose = require("mongoose");
 
 class CheckoutService {
   /*
@@ -60,6 +65,7 @@ class CheckoutService {
     if (!foundCart) throw new NotFoundError("Cart does not exist!");
 
     const products = foundCart.cart_products;
+
     if (!products || products.length === 0)
       throw new BadRequestError("Giỏ hàng trống!");
 
@@ -101,39 +107,76 @@ class CheckoutService {
     user_payment,
     // discountCode,
   }) => {
-    const { userId, email } = user;
-    const foundUser = await USER.findById({
-      _id: convertToObjectIdMongodb(userId),
-    });
+    const session = await mongoose.startSession();
 
-    const usrId = foundUser.usr_id;
+    let newOrder;
 
-    const { products, summary } = await this.checkoutReview({
-      cartId,
-      userId: usrId,
-      // discountCode,
-    });
+    await session.withTransaction(async () => {
+      const { userId, email } = user;
 
-    for (const item of products) {
-      if (item.sku_quantity < item.quantity) {
-        throw new BadRequestError(
-          `Sản phẩm ${item.skuId} không đủ số lượng trong kho.`
-        );
+      const foundUser = await USER.findById(
+        convertToObjectIdMongodb(userId)
+      ).session(session);
+
+      if (!foundUser) {
+        throw new BadRequestError("User not found");
       }
-    }
 
-    const newOrder = await order.create({
-      order_userId: usrId,
-      order_checkout: summary,
-      order_shipping: user_address,
-      order_payment: user_payment,
-      order_products: products,
+      const usrId = foundUser.usr_id;
+
+      const { products, summary } = await this.checkoutReview({
+        cartId,
+        userId: usrId,
+        // discountCode,
+      });
+
+      for (const item of products) {
+        // 🔹 SKU → trừ SKU + SPU
+        if (item.type === "SKU") {
+          const updatedSku = await reduceSkuStock({
+            skuId: item.skuId,
+            quantity: item.quantity,
+            session,
+          });
+
+          if (!updatedSku) {
+            throw new BadRequestError("Không đủ tồn kho SKU");
+          }
+        }
+
+        const updatedSpu = await SPU.findOneAndUpdate(
+          {
+            product_id: item.productId,
+            product_quantity: { $gte: item.quantity },
+          },
+          {
+            $inc: { product_quantity: -item.quantity },
+          },
+          { new: true, session }
+        );
+
+        if (!updatedSpu) {
+          throw new BadRequestError("Không đủ tồn kho sản phẩm");
+        }
+      }
+
+      [newOrder] = await order.create(
+        [
+          {
+            order_userId: usrId,
+            order_checkout: summary,
+            order_shipping: user_address,
+            order_payment: user_payment,
+            order_products: products,
+          },
+        ],
+        { session }
+      );
+
+      await cart.findOneAndDelete({ cart_userId: usrId }, { session });
     });
 
-    if (newOrder) {
-      await cart.findOneAndDelete({ cart_userId: usrId });
-    }
-
+    session.endSession();
     return newOrder;
   };
 

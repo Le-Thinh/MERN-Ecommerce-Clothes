@@ -15,6 +15,8 @@ router.post(
   asyncHandler(productController.uploadImageFromLocalS3)
 );
 
+//
+
 router.post("/spu/new", asyncHandler(productController.createSpu));
 router.patch(
   "/spu/update/:spuId",

@@ -7,7 +7,7 @@ import ComponentCard from "../common/ComponentCard";
 import PageBreadcrumb from "../common/PageBreadcrumb";
 import { image } from "../../assets";
 import { useShopContext } from "../../contexts";
-import { getAllCategory, getCategoryPublic } from "../../api/category.api";
+import { getCategoryPublic } from "../../api/category.api";
 import { toast } from "react-toastify";
 import { Modal } from "../modal";
 import { Link, useNavigate } from "react-router";
@@ -145,6 +145,16 @@ const CreateSpu = () => {
     }
   }, [productVariations]);
 
+  useEffect(() => {
+    if (sku.length > 0) {
+      const totalStock = sku.reduce(
+        (sum, item) => sum + Number(item.sku_stock || 0),
+        0
+      );
+      setProductQuantity(totalStock);
+    }
+  }, [sku]);
+
   // Update value
 
   const handleSubmit = async (e) => {
@@ -245,6 +255,7 @@ const CreateSpu = () => {
               <Input
                 name="product_quantity"
                 type="number"
+                disabled={sku.length > 0}
                 value={productQuantity}
                 onChange={(e) => setProductQuantity(e.target.value)}
                 placeholder="23"

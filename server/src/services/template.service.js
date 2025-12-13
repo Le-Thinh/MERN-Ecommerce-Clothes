@@ -18,7 +18,7 @@ class TemplateService {
     const newTem = await TEMPLATE.create({
       tem_name,
       tem_id,
-      tem_html: HTMLrepass(),
+      tem_html: htmlEmailToken(),
     });
 
     return newTem;

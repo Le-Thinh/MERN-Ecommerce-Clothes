@@ -218,38 +218,58 @@ const EditSpu = () => {
 
           <div className="grid grid-cols-2 gap-6">
             <div>
-              <Label>SKU List</Label>
-              {skus.map((item, index) => (
-                <div key={index} className="flex items-center">
-                  <span>
-                    {item.sku_tier_idx
-                      .map(
-                        (tierIdx, i) =>
-                          oneSpu.product_variations[i]?.options[tierIdx]
-                      )
-                      .join(" - ")}
-                  </span>
-                  <Input
-                    type="number"
-                    value={item.sku_price}
-                    className=""
-                    onChange={(e) => {
-                      const updated = [...skus];
-                      updated[index].sku_price = e.target.value;
-                      setSkus(updated);
-                    }}
-                  />
-                  <Input
-                    type="number"
-                    value={item.sku_stock}
-                    onChange={(e) => {
-                      const updated = [...skus];
-                      updated[index].sku_stock = e.target.value;
-                      setSkus(updated);
-                    }}
-                  />
+              <Label className="mb-2 block">SKU List</Label>
+
+              <div className="space-y-2">
+                {/* Header */}
+                <div className="grid grid-cols-3 gap-3 text-sm font-medium text-gray-600">
+                  <span>Variant</span>
+                  <span>Price</span>
+                  <span>Stock</span>
                 </div>
-              ))}
+
+                {/* SKU rows */}
+                {skus.map((item, index) => (
+                  <div
+                    key={index}
+                    className="grid grid-cols-3 gap-3 items-center rounded-lg border p-2"
+                  >
+                    {/* Variant */}
+                    <span className="text-sm font-medium">
+                      {item.sku_tier_idx
+                        .map(
+                          (tierIdx, i) =>
+                            oneSpu.product_variations[i]?.options[tierIdx]
+                        )
+                        .join(" - ")}
+                    </span>
+
+                    {/* Price */}
+                    <Input
+                      type="number"
+                      value={item.sku_price}
+                      className="h-9"
+                      onChange={(e) => {
+                        const updated = [...skus];
+                        updated[index].sku_price = Number(e.target.value);
+                        setSkus(updated);
+                      }}
+                    />
+
+                    {/* Stock */}
+                    <Input
+                      type="number"
+                      value={item.sku_stock}
+                      className="h-9"
+                      onChange={(e) => {
+                        const updated = [...skus];
+                        updated[index].sku_stock = Number(e.target.value);
+                        setSkus(updated);
+                      }}
+                    />
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
 

@@ -131,28 +131,35 @@ class CartService {
     return result;
   };
 
-  static deleteProduct = async ({ user, sku_id }) => {
+  static deleteProduct = async ({ user, sku_id, product_id }) => {
     const { userId, email } = user;
     const convertIdUser = convertToObjectIdMongodb(userId);
 
     const foundUser = await USER.findById(convertIdUser).lean();
     if (!foundUser) throw new NotFoundError("User Not Found");
 
-    const query = {
+    let pullCondition = {};
+    if (sku_id) {
+      pullCondition = { sku_id };
+    } else if (product_id) {
+      pullCondition = { product_id };
+    } else {
+      throw new BadRequestError("Thiếu sku_id hoặc product_id");
+    }
+
+    const result = await cart.findOneAndUpdate(
+      {
         cart_userId: foundUser.usr_id,
-        "cart_products.sku_id": sku_id,
         cart_state: "active",
       },
-      updateSet = {
+      {
         $pull: {
-          cart_products: { sku_id: sku_id },
+          cart_products: pullCondition,
         },
       },
-      options = {
-        new: true,
-      };
+      { new: true }
+    );
 
-    const result = await cart.findOneAndUpdate(query, updateSet, options);
     return result;
   };
 }
