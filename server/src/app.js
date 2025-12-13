@@ -41,6 +41,12 @@ app.use(
 
 // init routes
 app.use("/", require("./routes"));
+app.get("/", (req, res) => {
+  res.status(200).json({
+    status: "ok",
+    service: "MERN Backend",
+  });
+});
 
 // init DB
 require("./db/init.mongodb");
