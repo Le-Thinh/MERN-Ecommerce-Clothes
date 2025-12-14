@@ -6,6 +6,7 @@ const { default: helmet } = require("helmet");
 const compression = require("compression");
 const { v4: uuidv4 } = require("uuid");
 const cookieParser = require("cookie-parser");
+const connectDB = require("./db/init.mongodb");
 
 const app = express();
 
@@ -46,7 +47,10 @@ app.get("/", (req, res) => {
 app.use("/", require("./routes"));
 
 // init DB
-require("./db/init.mongodb");
+app.use(async (req, res, next) => {
+  await connectDB();
+  next();
+});
 
 // handle error
 app.use((req, res, next) => {
