@@ -9,53 +9,23 @@ const cookieParser = require("cookie-parser");
 
 const app = express();
 
-// const allowedOrigins = [process.env.URL_CLIENT, process.env.URL_ADMIN];
+const allowedOrigins = [process.env.URL_CLIENT, process.env.URL_ADMIN];
 
-// const corsOption = {
-//   origin: function (origin, callback) {
-//     if (!origin || allowedOrigins.includes(origin)) {
-//       callback(null, true);
-//     } else {
-//       callback(new Error("Not allowed by CORS"));
-//     }
-//   },
-//   methods: "GET, HEAD, PUT, PATCH, POST, DELETE",
-//   credentials: true,
-//   optionsSuccessStatus: 204,
-// };
-
-// init middlewares
-// app.use(cors(corsOption));
-
-const corsOptions = {
-  origin: (origin, callback) => {
-    if (!origin) return callback(null, true);
-
-    try {
-      const url = new URL(origin);
-
-      // Cho phép toàn bộ vercel preview + production
-      if (url.hostname.endsWith(".vercel.app")) {
-        return callback(null, true);
-      }
-
-      // Domain cố định
-      if (
-        origin === process.env.URL_CLIENT ||
-        origin === process.env.URL_ADMIN
-      ) {
-        return callback(null, true);
-      }
-    } catch (e) {
-      return callback(new Error("Invalid origin"));
+const corsOption = {
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
     }
-
-    return callback(new Error("Not allowed by CORS"));
   },
+  methods: "GET, HEAD, PUT, PATCH, POST, DELETE",
   credentials: true,
+  optionsSuccessStatus: 204,
 };
 
-app.use(cors(corsOptions));
+// init middlewares
+app.use(cors(corsOption));
 
 app.use(morgan("dev"));
 app.use(helmet());
