@@ -69,9 +69,12 @@ app.use(
 );
 
 // init logger
-
+app.get("/", (req, res) => {
+  res.json("Deploy Success");
+});
 // init routes
 app.use("/", require("./routes"));
+
 // init DB
 require("./db/init.mongodb");
 
