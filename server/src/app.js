@@ -26,12 +26,26 @@ const app = express();
 
 // init middlewares
 // app.use(cors(corsOption));
-app.use(
-  cors({
-    origin: true,
-    credentials: true,
-  })
-);
+
+const corsOptions = {
+  origin: (origin, callback) => {
+    if (!origin) return callback(null, true);
+
+    if (
+      origin.endsWith(".vercel.app") ||
+      origin === process.env.URL_CLIENT ||
+      origin === process.env.URL_ADMIN
+    ) {
+      return callback(null, true);
+    }
+
+    return callback(new Error("Not allowed by CORS"));
+  },
+  credentials: true,
+};
+
+app.use(cors(corsOptions));
+
 app.use(morgan("dev"));
 app.use(helmet());
 app.use(compression());
@@ -47,13 +61,6 @@ app.use(
 
 // init routes
 app.use("/", require("./routes"));
-app.get("/", (req, res) => {
-  res.status(200).json({
-    status: "ok",
-    service: "MERN Backend",
-  });
-});
-
 // init DB
 require("./db/init.mongodb");
 
