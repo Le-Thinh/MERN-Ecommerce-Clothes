@@ -31,12 +31,23 @@ const corsOptions = {
   origin: (origin, callback) => {
     if (!origin) return callback(null, true);
 
-    if (
-      origin.endsWith(".vercel.app") ||
-      origin === process.env.URL_CLIENT ||
-      origin === process.env.URL_ADMIN
-    ) {
-      return callback(null, true);
+    try {
+      const url = new URL(origin);
+
+      // Cho phép toàn bộ vercel preview + production
+      if (url.hostname.endsWith(".vercel.app")) {
+        return callback(null, true);
+      }
+
+      // Domain cố định
+      if (
+        origin === process.env.URL_CLIENT ||
+        origin === process.env.URL_ADMIN
+      ) {
+        return callback(null, true);
+      }
+    } catch (e) {
+      return callback(new Error("Invalid origin"));
     }
 
     return callback(new Error("Not allowed by CORS"));
