@@ -88,13 +88,7 @@ app.get("/", (req, res) => {
 });
 
 // init DB
-try {
-  require("./db/init.mongodb");
-  console.log("DB connected successfully"); // For logs
-} catch (err) {
-  console.error("DB connection failed:", err);
-  // Optionally, exit or handle gracefully
-}
+require("./db/init.mongodb");
 
 // handle error
 app.use((req, res, next) => {

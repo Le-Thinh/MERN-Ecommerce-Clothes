@@ -1,9 +1,9 @@
 "use strict";
 
 const mongoose = require("mongoose");
-const {
-  db: { host, port, name },
-} = require("../configs/mongodb.config");
+// const {
+//   db: { host, port, name },
+// } = require("../configs/mongodb.config");
 
 // const connectString = `mongodb://${host}:${port}/${name}`;
 const connectString = process.env.URL_MONGODB_ATLAS;
@@ -14,6 +14,10 @@ class Database {
   }
 
   connect(type = "mongodb") {
+    if (!connectString) {
+      console.error("Missing URL_MONGODB_ATLAS environment variable!");
+      throw new Error("Database connection string is undefined.");
+    }
     if (1 === 1) {
       mongoose.set("debug", true);
       mongoose.set("debug", {
