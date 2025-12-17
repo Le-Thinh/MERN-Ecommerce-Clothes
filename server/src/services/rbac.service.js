@@ -1,8 +1,8 @@
 "use strict";
 
-const ROLE = require("../models/role.model");
-const RESOURCE = require("../models/resource.model");
-const { BadRequestError } = require("../core/error.response");
+const ROLE = require("../models/role.model.js");
+const RESOURCE = require("../models/resource.model.js");
+const { BadRequestError } = require("../core/error.response.js");
 
 class RBACService {
   static createResource = async ({ src_name, src_slug, src_description }) => {

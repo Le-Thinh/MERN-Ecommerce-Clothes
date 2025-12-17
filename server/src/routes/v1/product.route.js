@@ -1,10 +1,10 @@
 "use strict";
 
 const express = require("express");
-const productController = require("../../controllers/product.controller");
-const asyncHandler = require("../../helpers/asyncHandler.helper");
-const { authentication } = require("../../auth/authUtils");
-const { uploadMemory, uploadDisk } = require("../../configs/multer.config");
+const productController = require("../../controllers/product.controller.js");
+const asyncHandler = require("../../helpers/asyncHandler.helper.js");
+const { authentication } = require("../../auth/authUtils.js");
+const { uploadMemory, uploadDisk } = require("../../configs/multer.config.js");
 const router = express.Router();
 
 // router.use(authentication);

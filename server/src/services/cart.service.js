@@ -1,14 +1,14 @@
 "use strict";
 
-const { cart } = require("../models/cart.model");
+const { cart } = require("../models/cart.model.js");
 const {
   createUserCart,
   updateUserCartQuantity,
-} = require("../models/repositories/cart.repo");
-const { findUserById } = require("../models/repositories/user.repo");
+} = require("../models/repositories/cart.repo.js");
+const { findUserById } = require("../models/repositories/user.repo.js");
 const { convertToObjectIdMongodb } = require("../utils");
-const USER = require("../models/user.model");
-const { NotFoundError } = require("../core/error.response");
+const USER = require("../models/user.model.js");
+const { NotFoundError } = require("../core/error.response.js");
 
 class CartService {
   static addToCart = async ({ user, product = {} }) => {

@@ -1,8 +1,8 @@
 "use strict";
 
 const express = require("express");
-const asyncHandler = require("../../helpers/asyncHandler.helper");
-const apiKeyController = require("../../controllers/apikey.controller");
+const asyncHandler = require("../../helpers/asyncHandler.helper.js");
+const apiKeyController = require("../../controllers/apikey.controller.js");
 
 const router = express.Router();
 

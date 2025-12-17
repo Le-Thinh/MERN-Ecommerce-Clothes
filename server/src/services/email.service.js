@@ -1,11 +1,11 @@
 "use strict";
 
-const { NotFoundError } = require("../core/error.response");
-const transport = require("../db/init.nodemailer");
-const { findUserByEmail } = require("../models/repositories/user.repo");
+const { NotFoundError } = require("../core/error.response.js");
+const transport = require("../db/init.nodemailer.js");
+const { findUserByEmail } = require("../models/repositories/user.repo.js");
 const { replacePlaceholder } = require("../utils");
-const { newOtp } = require("./otp.service");
-const templateService = require("./template.service");
+const { newOtp } = require("./otp.service.js");
+const templateService = require("./template.service.js");
 
 class EmailService {
   static sendMailLinkVerify = async ({

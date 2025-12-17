@@ -1,7 +1,7 @@
 "use strict";
 
-const { NotFoundError } = require("../core/error.response");
-const OTP = require("../models/otp.model");
+const { NotFoundError } = require("../core/error.response.js");
+const OTP = require("../models/otp.model.js");
 const crypto = require("crypto");
 
 class OTPService {

@@ -1,16 +1,16 @@
 "use strict";
 
-const { cart } = require("../models/cart.model");
-const { findCartById } = require("../models/repositories/cart.repo");
+const { cart } = require("../models/cart.model.js");
+const { findCartById } = require("../models/repositories/cart.repo.js");
 const {
   checkProductByServer,
   reduceSkuStock,
-} = require("../models/repositories/product.repo");
+} = require("../models/repositories/product.repo.js");
 const { convertToObjectIdMongodb } = require("../utils");
-const USER = require("../models/user.model");
-const SPU = require("../models/spu.model");
-const { order } = require("../models/order.model");
-const { NotFoundError, BadRequestError } = require("../core/error.response");
+const USER = require("../models/user.model.js");
+const SPU = require("../models/spu.model.js");
+const { order } = require("../models/order.model.js");
+const { NotFoundError, BadRequestError } = require("../core/error.response.js");
 const mongoose = require("mongoose");
 
 class CheckoutService {

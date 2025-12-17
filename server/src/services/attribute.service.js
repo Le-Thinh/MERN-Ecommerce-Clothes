@@ -1,13 +1,13 @@
 "use strict";
 
-const { BadRequestError, NotFoundError } = require("../core/error.response");
+const { BadRequestError, NotFoundError } = require("../core/error.response.js");
 const {
   findAttributeByName,
   findAttributeById,
-} = require("../models/repositories/attribute.repo");
+} = require("../models/repositories/attribute.repo.js");
 const { randomProductId, convertToObjectIdMongodb } = require("../utils");
 
-const ATTRIBUTE = require("../models/attribute.model");
+const ATTRIBUTE = require("../models/attribute.model.js");
 
 class AttributeService {
   static createAttribute = async ({ attribute_name, attribute_value }) => {

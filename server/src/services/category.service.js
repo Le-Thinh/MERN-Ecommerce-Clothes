@@ -1,13 +1,13 @@
 "use strict";
 
-const { BadRequestError, NotFoundError } = require("../core/error.response");
-const CATEGORY = require("../models/category.model");
+const { BadRequestError, NotFoundError } = require("../core/error.response.js");
+const CATEGORY = require("../models/category.model.js");
 const {
   findCategory,
   generateCatId,
   findCategoryById,
   updateCategoryById,
-} = require("../models/repositories/category.repo");
+} = require("../models/repositories/category.repo.js");
 const {
   convertToObjectIdMongodb,
   removeUndefinedObject,

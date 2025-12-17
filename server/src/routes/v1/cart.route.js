@@ -1,8 +1,8 @@
 "use strict";
 
 const express = require("express");
-const asyncHandler = require("../../helpers/asyncHandler.helper");
-const cartController = require("../../controllers/cart.controller");
+const asyncHandler = require("../../helpers/asyncHandler.helper.js");
+const cartController = require("../../controllers/cart.controller.js");
 const router = express.Router();
 const { authentication } = require("../../auth/authUtils");
 

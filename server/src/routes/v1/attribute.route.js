@@ -1,8 +1,8 @@
 "use strict";
 
 const express = require("express");
-const asyncHandler = require("../../helpers/asyncHandler.helper");
-const attributeController = require("../../controllers/attribute.controller");
+const asyncHandler = require("../../helpers/asyncHandler.helper.js");
+const attributeController = require("../../controllers/attribute.controller.js");
 const router = express.Router();
 
 router.post("/new-attribute", asyncHandler(attributeController.newAttribute));
