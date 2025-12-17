@@ -1,4 +1,4 @@
 note
 user-chillnfreeshop-bucket-s3_accessKeys.csv
 **/.env
-.vscode
+.vscodeserver/node_modules/
