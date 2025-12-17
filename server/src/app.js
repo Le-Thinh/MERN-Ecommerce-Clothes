@@ -84,6 +84,8 @@ app.use(
 app.use("/", require("./routes"));
 
 app.get("/", (req, res) => {
+  res.header["x-api-key"] =
+    "e1995e9e3d713b35eb9881791e07d90853cd386c98bf7409456b3bff75a7dff471b7dd0e11053b00b58a8cde891c3f85d98822aa46735b2bc2349d09293a14a1";
   res.json("Deploy Success");
 });
 
