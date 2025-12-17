@@ -47,10 +47,7 @@ app.get("/", (req, res) => {
 app.use("/", require("./routes"));
 
 // init DB
-app.use(async (req, res, next) => {
-  await connectDB();
-  next();
-});
+require("./db/init.mongodb");
 
 // handle error
 app.use((req, res, next) => {
