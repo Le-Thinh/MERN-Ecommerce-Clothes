@@ -50,7 +50,7 @@ app.use(
     ],
   })
 );
-app.options("*", cors());
+// app.options("*", cors());
 
 app.use(morgan("dev"));
 app.use(helmet());
@@ -64,11 +64,19 @@ app.use(
 );
 
 // init logger
+// init routes
+app.use("/", require("./routes"));
+
+app.use((req, res, next) => {
+  if (req.method === "OPTIONS") {
+    return res.status(200).end();
+  }
+  next();
+});
+
 app.get("/", (req, res) => {
   res.json("Deploy Success");
 });
-// init routes
-app.use("/", require("./routes"));
 
 // init DB
 require("./db/init.mongodb");
