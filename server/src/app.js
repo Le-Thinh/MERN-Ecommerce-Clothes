@@ -29,7 +29,7 @@ const allowedOrigins = [process.env.URL_CLIENT, process.env.URL_ADMIN];
 app.use(
   cors({
     origin: "*",
-    credentials: true,
+    credentials: false,
   })
 );
 
