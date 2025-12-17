@@ -32,7 +32,7 @@ class Database {
         console.log("Connected DB Successfully");
       })
       .catch((err) => {
-        console.error("Connecting DB Failure");
+        console.error("Connecting DB Failure: ", err);
       });
   }
 
