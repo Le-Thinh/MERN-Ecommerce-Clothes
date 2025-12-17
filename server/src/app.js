@@ -10,7 +10,9 @@ const connectDB = require("./db/init.mongodb");
 
 const app = express();
 
-const allowedOrigins = [process.env.URL_CLIENT, process.env.URL_ADMIN];
+const allowedOrigins = [process.env.URL_CLIENT, process.env.URL_ADMIN].filter(
+  Boolean
+);
 
 // const corsOption = {
 //   origin: function (origin, callback) {
@@ -26,20 +28,34 @@ const allowedOrigins = [process.env.URL_CLIENT, process.env.URL_ADMIN];
 // };
 
 // init middlewares
-// ===== CORS Configuration =====
+// app.use(
+//   cors({
+//     origin: function (origin, callback) {
+//       // Allow requests with no origin (like mobile apps or curl requests)
+//       if (!origin) return callback(null, true);
+
+//       if (allowedOrigins.indexOf(origin) !== -1) {
+//         callback(null, true);
+//       } else {
+//         callback(new Error("Not allowed by CORS"));
+//       }
+//     },
+//     credentials: true,
+//     methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
+//     allowedHeaders: [
+//       "Content-Type",
+//       "Authorization",
+//       "X-Requested-With",
+//       "x-api-key",
+//       "x-client-id",
+//     ],
+//   })
+// );
+// app.options("/*path", cors());
+
 app.use(
   cors({
-    origin: function (origin, callback) {
-      // Allow requests with no origin (like mobile apps or curl requests)
-      if (!origin) return callback(null, true);
-
-      if (allowedOrigins.indexOf(origin) !== -1) {
-        callback(null, true);
-      } else {
-        callback(new Error("Not allowed by CORS"));
-      }
-    },
-    credentials: true,
+    origin: "*",
     methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
     allowedHeaders: [
       "Content-Type",
@@ -48,9 +64,9 @@ app.use(
       "x-api-key",
       "x-client-id",
     ],
+    credentials: true,
   })
 );
-app.options("/*path", cors());
 
 app.use(morgan("dev"));
 app.use(helmet());
@@ -72,7 +88,13 @@ app.get("/", (req, res) => {
 });
 
 // init DB
-require("./db/init.mongodb");
+try {
+  require("./db/init.mongodb");
+  console.log("DB connected successfully"); // For logs
+} catch (err) {
+  console.error("DB connection failed:", err);
+  // Optionally, exit or handle gracefully
+}
 
 // handle error
 app.use((req, res, next) => {
