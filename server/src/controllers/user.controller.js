@@ -1,8 +1,8 @@
 "use strict";
 
-const { SuccessResponse } = require("../core/success.response");
-const EmailService = require("../services/email.service");
-const userService = require("../services/user.service");
+const { SuccessResponse } = require("../core/success.response.js");
+const EmailService = require("../services/email.service.js");
+const userService = require("../services/user.service.js");
 
 class UserController {
   // new user

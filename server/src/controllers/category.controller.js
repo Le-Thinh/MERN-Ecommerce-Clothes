@@ -1,7 +1,7 @@
 "use strict";
 
-const { SuccessResponse } = require("../core/success.response");
-const CategoryService = require("../services/category.service");
+const { SuccessResponse } = require("../core/success.response.js");
+const CategoryService = require("../services/category.service.js");
 
 class CategoryController {
   createCategory = async (req, res, next) => {

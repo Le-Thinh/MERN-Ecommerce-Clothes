@@ -1,7 +1,7 @@
 "use strict";
 
-const { SuccessResponse } = require("../core/success.response");
-const templateService = require("../services/template.service");
+const { SuccessResponse } = require("../core/success.response.js");
+const templateService = require("../services/template.service.js");
 
 class TemplateController {
   createTemplate = async (req, res, next) => {

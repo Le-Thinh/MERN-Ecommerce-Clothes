@@ -1,7 +1,7 @@
 "use strict";
 
-const { SuccessResponse } = require("../core/success.response");
-const apiKeyService = require("../services/apiKey.service");
+const { SuccessResponse } = require("../core/success.response.js");
+const apiKeyService = require("../services/apiKey.service.js");
 
 class ApiKeyController {
   createApiKey = async (req, res, next) => {

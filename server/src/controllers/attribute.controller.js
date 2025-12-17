@@ -1,6 +1,6 @@
 "use strict";
-const { SuccessResponse } = require("../core/success.response");
-const attributeService = require("../services/attribute.service");
+const { SuccessResponse } = require("../core/success.response.js");
+const attributeService = require("../services/attribute.service.js");
 
 class AttributeController {
   newAttribute = async (req, res, next) => {

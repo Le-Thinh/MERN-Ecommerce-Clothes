@@ -1,9 +1,9 @@
 "use strict";
-const { BadRequestError } = require("../core/error.response");
-const { SuccessResponse } = require("../core/success.response");
-const SPUService = require("../services/spu.service");
-const SKUService = require("../services/sku.service");
-const { uploadImageFromLocalS3 } = require("../services/upload.aws.service");
+const { BadRequestError } = require("../core/error.response.js");
+const { SuccessResponse } = require("../core/success.response.js");
+const SPUService = require("../services/spu.service.js");
+const SKUService = require("../services/sku.service.js");
+const { uploadImageFromLocalS3 } = require("../services/upload.aws.service.js");
 
 class ProductController {
   createSpu = async (req, res, next) => {

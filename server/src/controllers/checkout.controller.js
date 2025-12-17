@@ -1,7 +1,7 @@
 "use strict";
 
-const { SuccessResponse } = require("../core/success.response");
-const CheckoutService = require("../services/checkout.service");
+const { SuccessResponse } = require("../core/success.response.js");
+const CheckoutService = require("../services/checkout.service.js");
 
 class CheckoutController {
   orderByUser = async (req, res, next) => {

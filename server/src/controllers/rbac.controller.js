@@ -1,8 +1,8 @@
 "use strict";
 
-const { SuccessResponse } = require("../core/success.response");
+const { SuccessResponse } = require("../core/success.response.js");
 
-const RBACService = require("../services/rbac.service");
+const RBACService = require("../services/rbac.service.js");
 
 class RBACController {
   // Create new role
