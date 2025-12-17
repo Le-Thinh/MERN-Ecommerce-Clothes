@@ -28,10 +28,17 @@ const allowedOrigins = [process.env.URL_CLIENT, process.env.URL_ADMIN];
 // init middlewares
 app.use(
   cors({
-    origin: "*",
-    credentials: false,
+    origin: [
+      "https://client-bice-iota-13.vercel.app",
+      "https://admin-tau-puce-21.vercel.app",
+    ],
+    credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With"],
   })
 );
+
+app.options("*", cors());
 
 app.use(morgan("dev"));
 app.use(helmet());
